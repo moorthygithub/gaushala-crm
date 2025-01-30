@@ -20,6 +20,7 @@ import {
   PdfDownloadIncashRecepit,
   WhatsappIncashRecepit,
 } from "../../../components/ButtonComponents";
+import { inputClass } from "../../../components/common/Buttoncss";
 
 function ViewCashRecepit() {
   const [receipts, setReceipts] = useState(null);
@@ -171,14 +172,14 @@ function ViewCashRecepit() {
                 navigate("/cashrecepitall");
               }}
               type="button"
-              className="flex items-center gap-1 text-sm font-[400] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              className={inputClass}
             >
               + Create Receipt
             </button>
             <button
               onClick={() => navigate("/donor-list")}
               type="button"
-              className="flex items-center gap-1 text-sm font-[400] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              className={inputClass}
             >
               + Donor List
             </button>
@@ -192,22 +193,46 @@ function ViewCashRecepit() {
 
               <PdfDownloadIncashRecepit
                 onClick={downloadReceipt}
-                className=" text-sm font-[400] cursor-pointer   text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+                className={`${inputClass} w-[80px] flex items-center justify-center text-center`}
               />
               <WhatsappIncashRecepit
                 onClick={whatsApp}
-                className=" text-sm font-[400] cursor-pointer   text-white bg-green-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+                className={`${inputClass}  flex items-center justify-center text-center`}
               />
 
               {donor?.donor_email ? (
                 <>
-                  <div className="flex flex-col items-start cursor-pointer hover:text-blue-500">
+                  {/* <div className="flex flex-col items-start cursor-pointer hover:text-blue-500"> */}
+                  {/* <div
+                    className={`${inputClass}  flex items-center justify-center text-center`}
+                  >
                     <a onClick={sendEmail} className="flex items-center">
                       <MdEmail className="text-lg" />
                       <span>
                         {emailloading ? "Sending..." : "Send Email"}
                       </span>{" "}
                     </a>
+                    <small
+                      style={{ fontSize: "10px" }}
+                      className="cursor-pointer"
+                    >
+                      {receipts?.c_receipt_email_count == null
+                        ? "Email Sent 0 Times"
+                        : `Email Sent ${receipts.c_receipt_email_count} Times`}
+                    </small>
+                  </div> */}
+
+                  <div
+                    className={`${inputClass} flex flex-col items-center text-center`}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      <a onClick={sendEmail} className="flex items-center">
+                        <MdEmail className="text-lg" />
+                        <span>
+                          {emailloading ? "Sending..." : "Send Email"}
+                        </span>
+                      </a>
+                    </div>
                     <small
                       style={{ fontSize: "10px" }}
                       className="cursor-pointer"
@@ -223,9 +248,9 @@ function ViewCashRecepit() {
                   <p className="flex items-center">
                     <span>Email not found</span>
                   </p>
-                  <Button onClick={openModal} className="mt-2 bg-green-500">
+                  <button onClick={openModal} className={inputClass}>
                     Add Email
-                  </Button>
+                  </button>
                 </div>
               )}
 
@@ -251,14 +276,13 @@ function ViewCashRecepit() {
                 </DialogFooter>
               </Dialog>
 
-              <Button
-                variant="text"
-                className="flex items-center space-x-2"
+              <button
+                className={`${inputClass} flex items-center gap-1`}
                 onClick={printReceipt}
               >
                 <IoIosPrint className="text-lg" />
                 <span>Print Receipt</span>
-              </Button>
+              </button>
             </div>
             <hr></hr>
 

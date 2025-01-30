@@ -1,26 +1,18 @@
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import {
-  Navbar,
-  Typography,
-  Button,
-  IconButton,
-  Breadcrumbs,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-} from "@material-tailwind/react";
+import { Navbar, Typography, IconButton } from "@material-tailwind/react";
 import { UserCircleIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import Logout from "./Logout";
 import { useState } from "react";
 import { HiArrowRightStartOnRectangle } from "react-icons/hi2";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { Dialog, FormLabel, Tooltip } from "@mui/material";
+import { Dialog, Tooltip } from "@mui/material";
 import { X } from "lucide-react";
 import axios from "axios";
 import { BaseUrl } from "../base/BaseUrl";
 import { FaLock } from "react-icons/fa6";
 import { toast } from "react-toastify";
+
+import { inputClass } from "../components/common/Buttoncss";
 
 const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
   const { pathname } = useLocation();
@@ -123,7 +115,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
     }
   };
 
-  const inputClass =
+  const inputClassText =
     "w-full p-2 mt-2 text-sm border rounded-lg focus:outline-none focus:ring-2  focus:border-blue-300 disabled:bg-gray-200";
   const FormLabel = ({ children, required }) => (
     <label className="block text-sm font-semibold text-black mb-1 ">
@@ -274,7 +266,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                           setFirstName(e.target.value);
                         }
                       }}
-                      className={inputClass}
+                      className={inputClassText}
                     />
                   </div>
                   <div>
@@ -288,7 +280,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                           setPhone(e.target.value);
                         }
                       }}
-                      className={inputClass}
+                      className={inputClassText}
                     />
                   </div>
                   <div>
@@ -297,15 +289,12 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className={inputClass}
+                      className={inputClassText}
                     />
                   </div>
                 </div>
                 <div className="mt-5 flex justify-center">
-                  <button
-                    type="submit"
-                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 h-15 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-                  >
+                  <button type="submit" className={inputClass}>
                     Update Profile
                   </button>
                 </div>
@@ -353,7 +342,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                     type="password"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
-                    className={inputClass}
+                    className={inputClassText}
                   />
                 </div>
 
@@ -364,7 +353,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className={inputClass}
+                    className={inputClassText}
                   />
                 </div>
                 <div>
@@ -374,7 +363,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={inputClass}
+                    className={inputClassText}
                   />
                 </div>
 
@@ -382,7 +371,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                   <button
                     type="button"
                     onClick={onChangePassword}
-                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 h-15 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+                    className={inputClass}
                   >
                     Change Password
                   </button>

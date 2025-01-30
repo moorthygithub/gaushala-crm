@@ -12,6 +12,7 @@ import { FaUsers, FaWhatsapp } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import { GrGroup } from "react-icons/gr";
 import { LuDownload } from "react-icons/lu";
+import { inputClass } from "./common/Buttoncss";
 
 const getUserControlData = () => {
   const userControl = localStorage.getItem("userControl");
@@ -670,15 +671,9 @@ export const CreateUserButton = ({ onClick, className }) => {
   if (!shouldRenderButton("CreateUserButton", userType, "active")) return null;
 
   return (
-    <Button
-      variant="contained"
-      color="inherit"
-      onClick={onClick}
-      className={className}
-      title="Create Roles"
-    >
+    <button onClick={onClick} className={inputClass} title="Create Roles">
       Create Roles
-    </Button>
+    </button>
   );
 };
 CreateUserButton.page = "UserManagement";

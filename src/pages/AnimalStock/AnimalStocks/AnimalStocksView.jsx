@@ -10,6 +10,7 @@ import html2pdf from "html2pdf.js";
 import Layout from "../../../layout/Layout";
 import { BaseUrl } from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
+import { inputClass } from "../../../components/common/Buttoncss";
 
 function AnimalStocksView() {
   const navigate = useNavigate();
@@ -193,42 +194,36 @@ function AnimalStocksView() {
             </Typography>
           </div>
           <div className="flex flex-wrap space-x-4 justify-between w-full sm:w-auto">
-            <Button
-              variant="outlined"
-              color="blue"
-              className="flex items-center space-x-2 mb-2 sm:mb-0"
+            <button
+              className={`${inputClass} flex justify-center items-center space-x-3`}
               onClick={onSubmit1}
             >
               <LuDownload className="text-lg" />
               <span>Details Stock</span>
-            </Button>
-            <Button
-              variant="outlined"
-              color="blue"
-              className="flex items-center space-x-2 mb-2 sm:mb-0"
+            </button>
+            <button
+              className={`${inputClass} flex justify-center items-center space-x-3`}
               onClick={onSubmit}
             >
               <LuDownload className="text-lg" />
               <span>Stock</span>
-            </Button>
-            <Button
-              variant="outlined"
-              color="blue"
-              className="flex items-center space-x-2 mb-2 sm:mb-0"
+            </button>
+
+            <button
+              className={`${inputClass} flex justify-center items-center space-x-3`}
               onClick={PrintRecepit}
             >
               <IoIosPrint className="text-lg" />
-              <span>Detail Stock</span>
-            </Button>
-            <Button
-              variant="outlined"
-              color="blue"
-              className="flex items-center space-x-2"
+              <span className="ml-2">Detail Stock</span>
+            </button>
+
+            <button
+              className={`${inputClass} flex justify-center items-center space-x-3`}
               onClick={PrintRecepit1}
             >
               <IoIosPrint className="text-lg" />
               <span>Stock</span>
-            </Button>
+            </button>
           </div>
         </div>
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
 import Layout from "../../../layout/Layout";
 import Fields from "../../../components/common/TextField/TextField";
@@ -8,7 +7,10 @@ import { toast } from "react-toastify";
 import { BaseUrl } from "../../../base/BaseUrl";
 import { useQuery } from "@tanstack/react-query";
 import Dropdown from "../../../components/common/DropDown";
-import { Button } from "@material-tailwind/react";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
 
 // Unit options for dropdown
 const AnimalStatus = [
@@ -155,19 +157,18 @@ const EditAnimal = () => {
                 </div>
 
                 <div className="flex justify-center mt-4 space-x-4">
-                  <Button
+                  <button
                     type="submit"
                     disabled={isButtonDisabled}
-                    className="mt-4  bg-blue-400"
+                    className={`${inputClass} ${
+                      isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   >
-                    Update
-                  </Button>
-                  <Button
-                    className="mt-4 bg-red-400"
-                    onClick={handleBackButton}
-                  >
+                    {isButtonDisabled ? "Updating..." : "Update"}
+                  </button>
+                  <button className={inputClassBack} onClick={handleBackButton}>
                     Back
-                  </Button>
+                  </button>
                 </div>
               </form>
             </>

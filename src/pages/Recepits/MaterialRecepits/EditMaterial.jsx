@@ -8,6 +8,10 @@ import { toast } from "react-toastify";
 import { BaseUrl } from "../../../base/BaseUrl";
 import moment from "moment/moment";
 import { Button, Card, CardBody, Input } from "@material-tailwind/react";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
 
 const unit = [
   { value: "Kg", label: "Kg" },
@@ -381,12 +385,12 @@ const EditMaterial = () => {
             ))}
 
             <div className="flex justify-center mt-4 space-x-4 ">
-              <Button type="submit" className="mt-4 bg-blue-500">
+              <button type="submit" className={inputClass}>
                 Update
-              </Button>
-              <Button className="mt-4 bg-red-500" onClick={handleBackButton}>
+              </button>
+              <button className={inputClassBack} onClick={handleBackButton}>
                 Back
-              </Button>
+              </button>
             </div>
           </form>
         </div>

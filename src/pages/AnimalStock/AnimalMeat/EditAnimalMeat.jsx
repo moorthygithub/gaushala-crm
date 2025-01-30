@@ -11,6 +11,10 @@ import { Button, Input, Spinner } from "@material-tailwind/react";
 import { useQuery } from "@tanstack/react-query";
 import Dropdown from "../../../components/common/DropDown";
 import moment from "moment";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
 
 const EditAnimalMeat = () => {
   const navigate = useNavigate();
@@ -276,16 +280,18 @@ const EditAnimalMeat = () => {
             </div>
 
             <div className="flex justify-center mt-4 space-x-4">
-              <Button
+              <button
                 type="submit"
                 disabled={isButtonDisabled}
-                className="mt-4  bg-blue-400"
+                className={`${inputClass} ${
+                  isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Update
-              </Button>
-              <Button className="mt-4 bg-red-400" onClick={handleBackButton}>
+                {isButtonDisabled ? "Updating..." : "Update"}
+              </button>
+              <button className={inputClassBack} onClick={handleBackButton}>
                 Back
-              </Button>
+              </button>
             </div>
           </form>
         </div>
