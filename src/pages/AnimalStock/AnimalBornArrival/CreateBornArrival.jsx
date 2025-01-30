@@ -18,6 +18,10 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Dropdown from "../../../components/common/DropDown";
 import moment from "moment";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
 
 // Unit options for dropdown
 const AnimalGender = [
@@ -328,17 +332,19 @@ const CreateBornArrival = () => {
             </div>
 
             <div className="flex justify-center mt-4 space-x-4">
-              <Button
+              <button
                 type="submit"
                 disabled={isButtonDisabled}
-                className="mt-4  bg-blue-400"
+                className={`${inputClass} ${
+                  isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Submit
-              </Button>
+                {isButtonDisabled ? "Submitting..." : "Submit"}
+              </button>
 
-              <Button className="mt-4 bg-red-400" onClick={handleBackButton}>
+              <button className={inputClassBack} onClick={handleBackButton}>
                 Back
-              </Button>
+              </button>
             </div>
           </form>
         </div>

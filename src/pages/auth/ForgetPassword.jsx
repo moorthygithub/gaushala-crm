@@ -5,6 +5,7 @@ import Logo from "../../assets/logo.jpg";
 import { useState } from "react";
 import { BaseUrl } from "../../base/BaseUrl";
 import { toast } from "react-toastify";
+import { inputClass } from "../../components/common/Buttoncss";
 
 const ForgetPassword = () => {
   const [username, setUsername] = useState("");
@@ -106,13 +107,13 @@ const ForgetPassword = () => {
                 />
               </div>
 
-              <Button
+              <button
                 type="submit"
-                className="mt-6 bg-blue-500 hover:bg-blue-600 text-white"
+                className={`${inputClass} w-full`}
                 fullWidth
               >
                 Forget Password
-              </Button>
+              </button>
 
               <div className="flex items-center justify-between gap-2 mt-6">
                 <Typography

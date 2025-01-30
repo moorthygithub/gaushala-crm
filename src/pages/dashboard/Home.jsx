@@ -68,26 +68,26 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => (
 // /bar chart
 const BarChartComponent = ({ data }) => {
   if (!data || !data.graphbar || data.graphbar.length === 0) {
-    return <div>No data available</div>; 
+    return <div>No data available</div>;
   }
 
   const scaleFactor = 1000;
 
   const barData = {
-    labels: data.graphbar.map((item) => item.c_receipt_sub_donation_type), 
+    labels: data.graphbar.map((item) => item.c_receipt_sub_donation_type),
     datasets: [
       {
         label: "Total Amount (in thousands)",
-        data: data.graphbar.map((item) => item.total_amount / scaleFactor), 
-        backgroundColor: "#4BC0C0", 
-        borderColor: "#36A2EB", 
+        data: data.graphbar.map((item) => item.total_amount / scaleFactor),
+        backgroundColor: "#4BC0C0",
+        borderColor: "#36A2EB",
         borderWidth: 1,
       },
       {
         label: "Total Receipt Count",
-        data: data.graphbar.map((item) => item.total_recipt_count), 
-        backgroundColor: "#FFCE56", 
-        borderColor: "#FF6384", 
+        data: data.graphbar.map((item) => item.total_recipt_count),
+        backgroundColor: "#FFCE56",
+        borderColor: "#FF6384",
         borderWidth: 1,
       },
     ],
@@ -101,7 +101,7 @@ const BarChartComponent = ({ data }) => {
           responsive: true,
           plugins: {
             legend: {
-              position: "top", 
+              position: "top",
             },
             tooltip: {
               callbacks: {
@@ -130,7 +130,7 @@ const BarChartComponent = ({ data }) => {
               },
               ticks: {
                 callback: function (value) {
-                  return value.toLocaleString(); 
+                  return value.toLocaleString();
                 },
               },
             },
@@ -199,7 +199,6 @@ const NewsDashboard = () => {
           parseInt(item.total_amount)
         );
 
-   
         setGraph3(pieLabels);
         setGraph4(pieValues);
       } catch (error) {
@@ -299,7 +298,7 @@ const NewsDashboard = () => {
               className="bg-gradient-to-tl from-indigo-400 to-indigo-300 text-white p-6 rounded-xl shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <div className="flex flex-col items-center justify-center">
-                <span className="text-3xl font-extrabold mb-3">
+                <span className="text-2xl font-extrabold mb-3">
                   <NumericFormat
                     thousandSeparator={true}
                     thousandsGroupStyle="lakh"
@@ -311,9 +310,9 @@ const NewsDashboard = () => {
                     }
                   />
                 </span>
-                <span className="block text-sm text-indigo-100 mb-4">
+                {/* <span className="block text-sm text-indigo-100 mb-4">
                   {value.item_name}
-                </span>
+                </span> */}
               </div>
               <div className="border-t border-white pt-4 text-center">
                 <span className="text-md font-semibold text-white opacity-80">
@@ -328,7 +327,7 @@ const NewsDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               {isPieVisible && (
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden min-h-[385px]">
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden ">
                   <div className="p-3 border-b border-gray-100 flex justify-between items-center">
                     <div className="flex items-center gap-1">
                       <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
@@ -370,6 +369,12 @@ const NewsDashboard = () => {
                         height={150}
                       />
                     )}
+                    <h1>
+                      {" "}
+                      {(!graphData || graphData.length === 0) && (
+                        <div>No data available</div>
+                      )}
+                    </h1>
                   </div>
                 </div>
               )}
@@ -377,7 +382,7 @@ const NewsDashboard = () => {
 
             <div>
               {isBarVisible && (
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden ">
                   <div className="p-3 border-b border-gray-100 flex justify-between items-center">
                     <div className="flex items-center gap-1">
                       <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">

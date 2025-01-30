@@ -13,6 +13,7 @@ import {
   PdfDownloadInMaterialRecepit,
   WhatsappInMaterialRecepit,
 } from "../../../components/ButtonComponents";
+import { inputClass } from "../../../components/common/Buttoncss";
 
 function ViewMaterialRecepit() {
   const [receipts, setReceipts] = useState(null);
@@ -117,14 +118,14 @@ function ViewMaterialRecepit() {
             <button
               onClick={() => navigate("/materialrecepitall")}
               type="button"
-              className="flex items-center gap-1 text-sm font-[400] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              className={inputClass}
             >
               + Create Receipt
             </button>
             <button
               onClick={() => navigate("/donor-list")}
               type="button"
-              className="flex items-center gap-1 text-sm font-[400] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              className={inputClass}
             >
               + Donor List
             </button>
@@ -144,7 +145,9 @@ function ViewMaterialRecepit() {
               />
               {/* Email Section */}
               {donor?.donor_email ? (
-                <div className="p-4 hover:text-blue-500 cursor-pointer">
+                <div
+                  className={`${inputClass} flex flex-col items-center text-center`}
+                >
                   <a onClick={sendEmail} className="flex items-center">
                     <MdEmail className="text-lg" />
                     <span>
@@ -174,14 +177,13 @@ function ViewMaterialRecepit() {
               )}
 
               {/* Print Receipt */}
-              <Button
-                variant="text"
-                className="flex items-center space-x-2"
+              <button
+                className={`${inputClass} flex items-center gap-1`}
                 onClick={printReceipt}
               >
                 <IoIosPrint className="text-lg" />
                 <span>Print Receipt</span>
-              </Button>
+              </button>
             </div>
 
             <hr />

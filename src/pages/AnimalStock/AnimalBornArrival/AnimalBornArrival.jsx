@@ -4,17 +4,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "../../../layout/Layout";
 import {
-  AddAnimal,
-  AddAnimalMeet,
+
   AddBornorArrival,
-  EditAnimalMeet,
-  EditPurchase,
+
 } from "../../../components/ButtonComponents";
 import MUIDataTable from "mui-datatables";
 import { Spinner } from "@material-tailwind/react";
 import { BaseUrl } from "../../../base/BaseUrl";
 import AnimalStockFilter from "../../../components/common/AnimalStockFilter";
 import moment from "moment";
+import { inputClass } from "../../../components/common/Buttoncss";
 
 const fetchAnimalMeetList = async () => {
   const token = localStorage.getItem("token");
@@ -105,7 +104,7 @@ const AnimalBornArrival = () => {
       return (
         <AddBornorArrival
           onClick={() => navigate("/add-born-arrival")}
-          className=" text-sm font-[400] cursor-pointer   text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+          className={inputClass}
         />
       );
     },

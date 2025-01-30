@@ -10,6 +10,7 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import moment from "moment/moment";
 import html2pdf from "html2pdf.js";
+import { inputClass } from "../../components/common/Buttoncss";
 
 const TABLE_HEAD = [
   "Items Name",
@@ -128,14 +129,14 @@ function ViewStockSummary() {
           </div>
           <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4">
             <button
-              className="flex items-center gap-1 text-sm font-[400] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              className={`${inputClass} flex items-center gap-1 justify-center text-center w-[80px]`}
               onClick={downloadPDF}
             >
               <LuDownload className="text-lg mr-1" />
               <span className="mr-2"> PDF</span>
             </button>
             <button
-              className="flex items-center gap-1 text-sm font-[400] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              className={`${inputClass} flex items-center gap-1 justify-center text-center`}
               onClick={PrintRecepit}
             >
               <IoIosPrint className="text-lg " />

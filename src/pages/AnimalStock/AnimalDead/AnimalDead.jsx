@@ -15,6 +15,7 @@ import { Spinner } from "@material-tailwind/react";
 import { BaseUrl } from "../../../base/BaseUrl";
 import AnimalStockFilter from "../../../components/common/AnimalStockFilter";
 import moment from "moment";
+import { inputClass } from "../../../components/common/Buttoncss";
 
 const AnimalDeadDatas = async () => {
   const token = localStorage.getItem("token");
@@ -84,7 +85,7 @@ const AnimalDead = () => {
       return (
         <AddAnimalDead
           onClick={() => navigate("/add-animal-dead")}
-          className=" text-sm font-[400] cursor-pointer   text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+          className={inputClass}
         />
       );
     },
@@ -93,15 +94,6 @@ const AnimalDead = () => {
   return (
     <Layout>
       <AnimalStockFilter />
-      {/* <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-2 rounded-lg space-y-4 md:space-y-0">
-        <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
-          Animal Death /Given List
-        </h3>
-        <AddAnimalDead
-          onClick={() => navigate("/add-animal-dead")}
-          className="flex flex-row items-center gap-1 text-center text-sm font-[400] cursor-pointer text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
-        />
-      </div> */}
 
       {isLoading ? (
         <div className="flex justify-center items-center h-64">

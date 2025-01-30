@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MdKeyboardBackspace, MdDelete } from "react-icons/md";
 import axios from "axios";
 import Layout from "../../../layout/Layout";
 import Fields from "../../../components/common/TextField/TextField";
 import { toast } from "react-toastify";
-import { IconButton } from "@mui/material";
 import { BaseUrl } from "../../../base/BaseUrl";
-import { Button, Input } from "@material-tailwind/react";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
 
 // Unit options for dropdown
 const AnimalGender = [
@@ -57,6 +58,7 @@ const CreateAnimal = () => {
         })
         .catch(() => {
           toast.error("An error occurred, please try again.");
+          setIsButtonDisabled(false);
         })
         .finally(() => {
           setIsButtonDisabled(false);
@@ -93,16 +95,18 @@ const CreateAnimal = () => {
             </div>
 
             <div className="flex justify-center mt-4 space-x-4">
-              <Button
+              <button
                 type="submit"
                 disabled={isButtonDisabled}
-                className="mt-4  bg-blue-400"
+                className={`${inputClass} ${
+                  isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Submit
-              </Button>
-              <Button className="mt-4 bg-red-400" onClick={handleBackButton}>
+                {isButtonDisabled ? "Submitting..." : "Submit"}
+              </button>
+              <button className={inputClassBack} onClick={handleBackButton}>
                 Back
-              </Button>
+              </button>
             </div>
           </form>
         </div>

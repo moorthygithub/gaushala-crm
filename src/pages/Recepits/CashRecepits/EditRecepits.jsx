@@ -9,6 +9,10 @@ import { toast } from "react-toastify";
 import { BaseUrl } from "../../../base/BaseUrl";
 import moment from "moment/moment";
 import { Button, Card, CardBody, Input } from "@material-tailwind/react";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
 
 const exemption = [
   {
@@ -573,16 +577,19 @@ const EditRecepit = () => {
               </div>
             ))}
             <div className="flex justify-center mt-4 space-x-4">
-              <Button
+              <button
                 type="submit"
                 disabled={isButtonDisabled}
-                className="mt-4 bg-blue-400"
+                className={`${inputClass} ${
+                  isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 Update
-              </Button>
-              <Button className="mt-4 bg-red-400" onClick={handleBackButton}>
+              </button>
+
+              <button className={inputClassBack} onClick={handleBackButton}>
                 Back
-              </Button>
+              </button>
             </div>
           </form>
         </div>

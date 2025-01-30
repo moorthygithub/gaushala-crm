@@ -14,6 +14,7 @@ import { ContextPanel } from "../../utils/ContextPanel";
 import image1 from "../../assets/mainpage.jpg";
 import Logo from "../../assets/logo.jpg";
 import { toast } from "react-toastify";
+import { inputClass } from "../../components/common/Buttoncss";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -104,7 +105,7 @@ const SignIn = () => {
         <div className="flex-1 flex items-center bg-blue-50 justify-center px-4 lg:px-8 py-12 h-full lg:w-1/2">
           <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg  shadow-blue-500 ">
             <h2 className="flex justify-center font-extrabold text-5xl bg-gradient-to-b from-[#32e432] via-[#1f1f75] to-[#FF8C00] bg-clip-text text-transparent">
-          GAUSHALA
+              GAUSHALA
             </h2>
             {/* <div>
               <img
@@ -173,14 +174,37 @@ const SignIn = () => {
                 />
               </div>
 
-              <Button
+              {/* <button
                 type="submit"
                 disabled={loading}
-                className="mt-6 bg-blue-500 hover:bg-blue-600 text-white"
+                className={`${inputClass} ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                } w-full`}
                 fullWidth
               >
                 {loading ? "Checking..." : "Sign In"}
-              </Button>
+              </button> */}
+              <button
+                type="submit"
+                disabled={loading}
+                className={`${inputClass} w-full flex items-center justify-center space-x-3 py-2 px-4 transition-all duration-300 ease-in-out transform ${
+                  loading
+                    ? "opacity-75 cursor-not-allowed scale-95"
+                    : "scale-100"
+                }`}
+              >
+                {loading ? (
+                  <>
+                    <div className="w-6 h-6 border-4 border-t-4 border-transparent border-t-blue-600 rounded-full animate-spin"></div>
+                    <span className="animate-pulse">Checking...</span>
+                  </>
+                ) : (
+                  <span className="transition-opacity duration-300 ease-in-out opacity-100">
+                    Sign In
+                  </span>
+                )}
+              </button>
+
               <div className="flex items-center justify-end gap-2 mt-6">
                 <Typography
                   variant="small"
