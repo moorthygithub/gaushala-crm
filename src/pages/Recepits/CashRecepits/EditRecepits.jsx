@@ -13,6 +13,7 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const exemption = [
   {
@@ -144,9 +145,10 @@ const EditRecepit = () => {
   const navigate = useNavigate();
   const [userfamilydata, setUserfFamilydata] = React.useState("");
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [userdata, setUserdata] = useState("");
 
-  console.log(id);
 
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -308,7 +310,7 @@ const EditRecepit = () => {
       setIsButtonDisabled(true);
 
       axios
-        .put(`${BaseUrl}/update-c-receipt/${id}`, data, {
+        .put(`${BaseUrl}/update-c-receipt/${decryptedId}`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -350,7 +352,7 @@ const EditRecepit = () => {
 
   useEffect(() => {
     axios({
-      url: BaseUrl + "/fetch-c-receipt-by-id/" + id,
+      url: BaseUrl + "/fetch-c-receipt-by-id/" + decryptedId,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -362,7 +364,7 @@ const EditRecepit = () => {
       setUserdata(res.data.donor);
       console.log("datatable", res.data.donor);
     });
-  }, [id]);
+  }, [decryptedId]);
   //DAY CLOSE
   console.log(users, "sers");
 

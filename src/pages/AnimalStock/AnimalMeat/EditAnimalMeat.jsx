@@ -15,10 +15,12 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const EditAnimalMeat = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
 
   const [animalmeet, setAnimalMeet] = useState({
     animal_male_no: "",
@@ -68,7 +70,7 @@ const EditAnimalMeat = () => {
   const fetchAnimalById = async () => {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      `${BaseUrl}/fetch-animalMeet-by-id/${id}`,
+      `${BaseUrl}/fetch-animalMeet-by-id/${decryptedId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -81,9 +83,9 @@ const EditAnimalMeat = () => {
     isLoading: isLoadingAnimal,
     isError,
   } = useQuery({
-    queryKey: ["AnimalListId", id],
+    queryKey: ["AnimalListId", decryptedId],
     queryFn: fetchAnimalById,
-    enabled: !!id && !!AnimalMeetMaleData && !!AnimalMeetFemaleData,
+    enabled: !!decryptedId && !!AnimalMeetMaleData && !!AnimalMeetFemaleData,
   });
 
   useEffect(() => {
@@ -136,7 +138,7 @@ const EditAnimalMeat = () => {
       setIsButtonDisabled(true);
       try {
         const res = await axios.put(
-          `${BaseUrl}/update-animalMeet/${id}`,
+          `${BaseUrl}/update-animalMeet/${decryptedId}`,
           data,
           {
             headers: {

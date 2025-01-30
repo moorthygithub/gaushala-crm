@@ -12,6 +12,7 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const unit = [
   { value: "Kg", label: "Kg" },
@@ -23,8 +24,8 @@ const EditMaterial = () => {
   const navigate = useNavigate();
   const [donors, setDonors] = useState([]);
   const { id } = useParams();
+  const decryptedId = decryptId(id);
 
-  console.log(id);
 
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -173,7 +174,7 @@ const EditMaterial = () => {
       setIsButtonDisabled(true);
 
       axios
-        .put(`${BaseUrl}/update-m-receipt/${id}`, data, {
+        .put(`${BaseUrl}/update-m-receipt/${decryptedId}`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -203,7 +204,7 @@ const EditMaterial = () => {
 
   useEffect(() => {
     axios({
-      url: BaseUrl + "/fetch-m-receipt-by-id/" + id,
+      url: BaseUrl + "/fetch-m-receipt-by-id/" + decryptedId,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -214,7 +215,7 @@ const EditMaterial = () => {
       setDonor(res.data.receipts);
       console.log("datatable", res.data.donor);
     });
-  }, [id]);
+  }, [decryptedId]);
 
   const [item, setItem] = useState([]);
 

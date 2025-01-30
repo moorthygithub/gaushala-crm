@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import InputMask from "react-input-mask";
 import FamilyGroupModal from "./FamilyGroupModa";
 import { inputClass, inputClassBack } from "../../components/common/Buttoncss";
+import { decryptId } from "../../components/common/EncryptDecrypt";
 
 const gender = [
   {
@@ -52,6 +53,8 @@ const title1 = [
 const EditDonorList = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [donor, setDonor] = useState({
     donor_full_name: "",
@@ -152,7 +155,7 @@ const EditDonorList = () => {
     };
     try {
       const response = await axios({
-        url: BaseUrl + "/update-donor-by-id/" + id,
+        url: BaseUrl + "/update-donor-by-id/" + decryptedId,
         method: "PUT",
         data,
         headers: {
@@ -213,7 +216,7 @@ const EditDonorList = () => {
   //GET DATA
   useEffect(() => {
     axios({
-      url: `${BaseUrl}/fetch-donor-by-id/${id}`,
+      url: `${BaseUrl}/fetch-donor-by-id/${decryptedId}`,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -242,7 +245,7 @@ const EditDonorList = () => {
     }
 
     axios({
-      url: `${BaseUrl}/update-donor-by-id/${id}`,
+      url: `${BaseUrl}/update-donor-by-id/${decryptedId}`,
       method: "PUT",
       data,
       headers: {

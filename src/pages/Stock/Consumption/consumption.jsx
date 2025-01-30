@@ -13,6 +13,7 @@ import {
   EditConsumption,
 } from "../../../components/ButtonComponents";
 import { inputClass } from "../../../components/common/Buttoncss";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const Consumption = () => {
   const [consumptionList, setConsumptionList] = useState(null);
@@ -79,7 +80,13 @@ const Consumption = () => {
           return (
             <div className="flex items-center space-x-2">
               <EditConsumption
-                onClick={() => navigate(`/edit-consumption/${id}`)}
+                // onClick={() => navigate(`/edit-consumption/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id);
+                  navigate(
+                    `/edit-consumption/${encodeURIComponent(encryptedId)}`
+                  );
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
             </div>

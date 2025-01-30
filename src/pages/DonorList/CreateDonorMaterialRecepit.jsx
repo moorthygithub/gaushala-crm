@@ -16,6 +16,7 @@ import {
   Input,
 } from "@material-tailwind/react";
 import { inputClass, inputClassBack } from "../../components/common/Buttoncss";
+import { decryptId } from "../../components/common/EncryptDecrypt";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -29,9 +30,9 @@ const DonorDonationReceipt = () => {
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
   const { id } = useParams();
-  const [userdata, setUserdata] = useState("");
+  const decryptedId = decryptId(id);
 
-  console.log(id);
+  const [userdata, setUserdata] = useState("");
 
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -295,7 +296,7 @@ const DonorDonationReceipt = () => {
 
   useEffect(() => {
     axios({
-      url: BaseUrl + "/fetch-donor-by-id/" + id,
+      url: BaseUrl + "/fetch-donor-by-id/" + decryptedId,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

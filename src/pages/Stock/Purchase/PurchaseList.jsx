@@ -12,12 +12,23 @@ import {
   EditPurchase,
 } from "../../../components/ButtonComponents";
 import { inputClass } from "../../../components/common/Buttoncss";
-
+import CryptoJS from "crypto-js";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 const PurchaseList = () => {
   const [pendingDListData, setPendingDListData] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  //encryption
+  // const secretKey = "AGSOLUTION@123";
+
+  // const encryptId = (id) => {
+  //   if (!id) {
+  //     console.error("ID is missing");
+  //     return "";
+  //   }
+  //   return CryptoJS.AES.encrypt(id.toString(), secretKey).toString();
+  // };
   useEffect(() => {
     const fetchOpenData = async () => {
       try {
@@ -103,10 +114,28 @@ const PurchaseList = () => {
         customBodyRender: (id) => {
           return (
             <div className="flex items-center space-x-2">
-              <EditPurchase
+              {/* <EditPurchase
                 onClick={() => navigate(`/edit-purchase/${id}`)}
                 className="h-5 w-5 cursor-pointer text-blue-500"
-              />
+              /> */}
+              {/* <EditPurchase
+                onClick={() => {
+                  const encryptedId = encryptId(id);
+                  navigate(`/edit-purchase/${encodeURIComponent(encryptedId)}`);
+                }}
+                className="h-5 w-5 cursor-pointer text-blue-500"
+              /> */}
+              <div className="flex items-center space-x-2">
+                <EditPurchase
+                  onClick={() => {
+                    const encryptedId = encryptId(id); // Encrypt the ID
+                    navigate(
+                      `/edit-purchase/${encodeURIComponent(encryptedId)}`
+                    );
+                  }}
+                  className="h-5 w-5 cursor-pointer text-blue-500"
+                />
+              </div>
             </div>
           );
         },

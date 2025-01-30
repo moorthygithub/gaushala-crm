@@ -20,7 +20,10 @@ import {
   PdfDownloadIncashRecepit,
   WhatsappIncashRecepit,
 } from "../../../components/ButtonComponents";
-import { inputClass } from "../../../components/common/Buttoncss";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
 
 function ViewCashRecepit() {
   const [receipts, setReceipts] = useState(null);
@@ -167,27 +170,6 @@ function ViewCashRecepit() {
             Cash Receipt
           </h1>
           <div className="flex space-x-3">
-            <button
-              onClick={() => {
-                navigate("/cashrecepitall");
-              }}
-              type="button"
-              className={inputClass}
-            >
-              + Create Receipt
-            </button>
-            <button
-              onClick={() => navigate("/donor-list")}
-              type="button"
-              className={inputClass}
-            >
-              + Donor List
-            </button>
-          </div>
-        </div>
-
-        {receipts && (
-          <div>
             <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4 p-3">
               {/* Buttons for Download and WhatsApp */}
 
@@ -202,26 +184,6 @@ function ViewCashRecepit() {
 
               {donor?.donor_email ? (
                 <>
-                  {/* <div className="flex flex-col items-start cursor-pointer hover:text-blue-500"> */}
-                  {/* <div
-                    className={`${inputClass}  flex items-center justify-center text-center`}
-                  >
-                    <a onClick={sendEmail} className="flex items-center">
-                      <MdEmail className="text-lg" />
-                      <span>
-                        {emailloading ? "Sending..." : "Send Email"}
-                      </span>{" "}
-                    </a>
-                    <small
-                      style={{ fontSize: "10px" }}
-                      className="cursor-pointer"
-                    >
-                      {receipts?.c_receipt_email_count == null
-                        ? "Email Sent 0 Times"
-                        : `Email Sent ${receipts.c_receipt_email_count} Times`}
-                    </small>
-                  </div> */}
-
                   <div
                     className={`${inputClass} flex flex-col items-center text-center`}
                   >
@@ -229,18 +191,88 @@ function ViewCashRecepit() {
                       <a onClick={sendEmail} className="flex items-center">
                         <MdEmail className="text-lg" />
                         <span>
-                          {emailloading ? "Sending..." : "Send Email"}
+                          {emailloading ? "Sending..." : "Send Email"}{" "}
+                          {receipts?.c_receipt_email_count == null
+                            ? "(0)"
+                            : `(${receipts.c_receipt_email_count})`}
                         </span>
                       </a>
                     </div>
-                    <small
-                      style={{ fontSize: "10px" }}
-                      className="cursor-pointer"
-                    >
-                      {receipts?.c_receipt_email_count == null
-                        ? "Email Sent 0 Times"
-                        : `Email Sent ${receipts.c_receipt_email_count} Times`}
-                    </small>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-start text-red-500 ">
+                  <button onClick={openModal} className={`${inputClass} mt-6`}>
+                    Add Email
+                  </button>
+                  <p className="flex items-center ml-6">
+                    <span>Email not found</span>
+                  </p>
+                </div>
+              )}
+
+              <Dialog open={showModal} handler={closeModal}>
+                <DialogHeader>Add Donor Email</DialogHeader>
+                <DialogBody>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter donor email"
+                    className="w-full px-3 py-2 mt-1 border rounded"
+                    name="donor_email"
+                  />
+                </DialogBody>
+                <DialogFooter>
+                  <button onClick={closeModal} className={inputClassBack}>
+                    Cancel
+                  </button>
+                  <button onClick={onSubmitEmail} className={inputClass}>
+                    Add Email
+                  </button>
+                </DialogFooter>
+              </Dialog>
+
+              <button
+                className={`${inputClass} flex  justify-center items-center gap-1`}
+                onClick={printReceipt}
+              >
+                <IoIosPrint className="text-lg" />
+                <span>Print</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {receipts && (
+          <div>
+            {/* <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4 p-3">
+
+              <PdfDownloadIncashRecepit
+                onClick={downloadReceipt}
+                className={`${inputClass} w-[80px] flex items-center justify-center text-center`}
+              />
+              <WhatsappIncashRecepit
+                onClick={whatsApp}
+                className={`${inputClass}  flex items-center justify-center text-center`}
+              />
+
+              {donor?.donor_email ? (
+                <>
+                  <div
+                    className={`${inputClass} flex flex-col items-center text-center`}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      <a onClick={sendEmail} className="flex items-center">
+                        <MdEmail className="text-lg" />
+                        <span>
+                          {emailloading ? "Sending..." : "Send Email"}{" "}
+                          {receipts?.c_receipt_email_count == null
+                            ? "(0)"
+                            : `(${receipts.c_receipt_email_count})`}
+                        </span>
+                      </a>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -277,13 +309,13 @@ function ViewCashRecepit() {
               </Dialog>
 
               <button
-                className={`${inputClass} flex items-center gap-1`}
+                className={`${inputClass} flex  justify-center items-center gap-1`}
                 onClick={printReceipt}
               >
                 <IoIosPrint className="text-lg" />
-                <span>Print Receipt</span>
+                <span>Print</span>
               </button>
-            </div>
+            </div> */}
             <hr></hr>
 
             <div className="flex justify-center mt-2">
@@ -306,11 +338,28 @@ function ViewCashRecepit() {
 
                   <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
                     <strong>Received with thanks from:</strong>
-                    <p className="text-black font-bold text-sm ml-2">
-                      {donor?.donor_title} {donor?.donor_full_name},{" "}
-                      {donor?.donor_city} - {donor?.donor_pin_code},{" "}
-                      {donor?.donor_state}
-                    </p>
+                    {receipts.family_full_check == "Yes" ? (
+                      <>
+                        <p className="text-black font-bold text-sm ml-2">
+                          {donor?.donor_title} {receipts?.family_full_name},{" "}
+                          {donor?.donor_city} - {donor?.donor_pin_code},{" "}
+                          {donor?.donor_state}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-black font-bold text-sm ml-2">
+                          {donor?.donor_title} {donor?.donor_full_name},{" "}
+                          {donor?.donor_city} - {donor?.donor_pin_code},{" "}
+                          {donor?.donor_state}
+                        </p>
+                      </>
+                    )}
+                    {/* <p className="text-black font-bold text-sm ml-2">
+                      {receipts.family_full_check === "Yes"
+                        ? `${donor?.donor_title} ${receipts?.family_full_name}, ${donor?.donor_city} - ${donor?.donor_pin_code}, ${donor?.donor_state}`
+                        : `${donor?.donor_title} ${donor?.donor_full_name}, ${donor?.donor_city} - ${donor?.donor_pin_code}, ${donor?.donor_state}`}
+                    </p> */}
                   </div>
 
                   <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">

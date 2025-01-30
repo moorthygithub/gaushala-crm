@@ -87,7 +87,7 @@ const App = () => {
           <Route path="/register" element={<SIgnUp />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           {/* <Route path="/enquiry-now" element={<EnquiryNow />} /> */}
-          <Route path="/home"  element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/maintenance" element={<Maintenance />} />
           <Route path="/donor-list" element={<DonorList />} />
           <Route path="/add-donor/:id?" element={<AddDonorList />} />
@@ -138,61 +138,25 @@ const App = () => {
           <Route path="/cashpurchase" element={<Students />} />
           <Route path="/cash" element={<Cash />} />
           <Route path="/M-recepit" element={<Exam />} />
-          <Route
-            path="/D-consumption"
-             element={<DowloadConsumption />} 
-          />
-          <Route
-            path="/VendorList"
-             element={<VendorList />} 
-          />
-          <Route
-            path="/EditVendors/:id"
-           element={<EditVendors />} 
-          />
-          <Route
-            path="/add-purchase"
-         element={<AddPurchase />} 
-          />
+          <Route path="/D-consumption" element={<DowloadConsumption />} />
+          <Route path="/VendorList" element={<VendorList />} />
+          <Route path="/EditVendors/:id" element={<EditVendors />} />
+          <Route path="/add-purchase" element={<AddPurchase />} />
           <Route
             path="/edit-purchase/:id"
-           element={<EditPurchase />} 
+            element={<EditPurchase />}
           />
-          <Route
-            path="/add-consumption"
-           element={<AddConsumption />} 
-          />
-          <Route
-            path="/edit-consumption/:id"
-            element={<EditConsumption />} 
-          />
+          <Route path="/add-consumption" element={<AddConsumption />} />
+          <Route path="/edit-consumption/:id" element={<EditConsumption />} />
           {/* //STOCK */}
-          <Route
-            path="/stock"
-       element={<Stock />} 
-          />
-          <Route
-            path="/recepit-edit/:id"
-          element={<EditRecepit />} 
-          />
-          <Route
-            path="/recepit-view/:id"
-           element={<ViewCashRecepit />}
-          />
+          <Route path="/stock" element={<Stock />} />
+          <Route path="/recepit-edit/:id" element={<EditRecepit />} />
+          <Route path="/recepit-view/:id" element={<ViewCashRecepit />} />
           {/* //MATERIAL Recepits */}
-          <Route
-            path="/material-edit/:id"
-           element={<EditMaterial />} 
-          />
-          <Route
-            path="/material-view/:id"
-           element={<ViewMaterial />} 
-          />
+          <Route path="/material-edit/:id" element={<EditMaterial />} />
+          <Route path="/material-view/:id" element={<ViewMaterial />} />
           {/* //DOWLOAD */}
-          <Route
-            path="/web-donation"
-            element={<DownloadWebDonation />} 
-          />
+          <Route path="/web-donation" element={<DownloadWebDonation />} />
           <Route path="/webdonation" element={<WebDonation />} />
           <Route path="/test" element={<Test />} />
           <Route path="/userManagement" element={<TabIndex />} />

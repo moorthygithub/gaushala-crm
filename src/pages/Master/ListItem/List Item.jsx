@@ -11,6 +11,7 @@ import {
   EditListItem,
 } from "../../../components/ButtonComponents";
 import { inputClass } from "../../../components/common/Buttoncss";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const OpenListEnquiry = () => {
   const [openListData, setOpenListData] = useState([]);
@@ -77,7 +78,11 @@ const OpenListEnquiry = () => {
           return (
             <div className="flex items-center space-x-2">
               <EditListItem
-                onClick={() => navigate(`/edit-enquiry/${id}`)}
+                // onClick={() => navigate(`/edit-enquiry/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/edit-enquiry/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
             </div>

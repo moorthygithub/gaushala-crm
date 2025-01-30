@@ -13,6 +13,7 @@ import {
   NoDuplicateDonor,
   ZeroDuplicateDonor,
 } from "../../../components/ButtonComponents";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const DuplicateDonorList = () => {
   const [duplicate, setDuplicate] = useState([]);
@@ -115,11 +116,23 @@ const DuplicateDonorList = () => {
                 <>
                   <EditDuplicateDonor
                     className="h-5 w-5 cursor-pointer text-blue-500"
-                    onClick={() => navigate(`/edit-duplicate/${id}`)}
+                    // onClick={() => navigate(`/edit-duplicate/${id}`)}
+                    onClick={() => {
+                      const encryptedId = encryptId(id);
+                      navigate(
+                        `/edit-duplicate/${encodeURIComponent(encryptedId)}`
+                      );
+                    }}
                   />
                   <NoDuplicateDonor
                     className="h-5 w-5 cursor-pointer text-blue-500"
-                    onClick={() => navigate(`/no-duplicate/${id}`)}
+                    // onClick={() => navigate(`/no-duplicate/${id}`)}
+                    onClick={() => {
+                      const encryptedId = encryptId(id);
+                      navigate(
+                        `/no-duplicate/${encodeURIComponent(encryptedId)}`
+                      );
+                    }}
                   />
                 </>
               ) : (
@@ -130,7 +143,13 @@ const DuplicateDonorList = () => {
                   />
                   <ZeroDuplicateDonor
                     className="h-5 w-5 cursor-pointer text-blue-500"
-                    onClick={() => navigate(`/zero-duplicate/${id}`)}
+                    // onClick={() => navigate(`/zero-duplicate/${id}`)}
+                    onClick={() => {
+                      const encryptedId = encryptId(id);
+                      navigate(
+                        `/zero-duplicate/${encodeURIComponent(encryptedId)}`
+                      );
+                    }}
                   />
                 </>
               )}

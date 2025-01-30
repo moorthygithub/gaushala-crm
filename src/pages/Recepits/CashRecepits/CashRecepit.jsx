@@ -13,6 +13,7 @@ import {
   ViewDonationReceipt,
 } from "../../../components/ButtonComponents";
 import { useQuery } from "@tanstack/react-query";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const fetchCashRecepitData = async () => {
   const token = localStorage.getItem("token");
@@ -39,16 +40,50 @@ const RecepitCashRecepit = () => {
         sort: false,
       },
     },
+    //1
     {
       name: "donor_full_name",
+      label: "Name",
+      options: {
+        filter: false,
+        display: "exclude",
+        viewColumns: false,
+        searchable: true,
+        sort: true,
+      },
+    },
+    //2
+    {
+      name: "family_full_name",
+      label: "Name",
+      options: {
+        filter: false,
+        display: "exclude",
+        viewColumns: false,
+        searchable: true,
+        sort: true,
+      },
+    },
+
+    {
+      name: "full_name",
       label: "Name",
       options: {
         filter: false,
         print: true,
         download: true,
         sort: false,
+        customBodyRender: (value, tableMeta) => {
+          const donorName = tableMeta.rowData[1];
+          const familyName = tableMeta.rowData[2];
+
+          return familyName && familyName.trim() !== ""
+            ? familyName
+            : donorName;
+        },
       },
     },
+
     {
       name: "c_receipt_date",
       label: "Date",
@@ -103,11 +138,19 @@ const RecepitCashRecepit = () => {
             <div className="flex items-center space-x-2">
               <ViewDonationReceipt
                 onClick={() => navigate(`/recepit-view/${id}`)}
+                // onClick={() => {
+                //   const encryptedId = encryptId(id); // Encrypt the ID
+                //   navigate(`/recepit-view/${encodeURIComponent(encryptedId)}`);
+                // }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
 
               <EditDonationReceipt
-                onClick={() => navigate(`/recepit-edit/${id}`)}
+                // onClick={() => navigate(`/recepit-edit/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/recepit-edit/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
             </div>

@@ -78,7 +78,6 @@ const AddDonorList = () => {
     donor_state: "",
     donor_pin_code: "",
   });
-  console.log("locationvalue", value);
   const validateOnlyDigits = (inputtxt) => {
     var phoneno = /^\d+$/;
     if (inputtxt.match(phoneno) || inputtxt.length == 0) {

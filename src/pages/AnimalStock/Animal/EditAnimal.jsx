@@ -11,6 +11,7 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 // Unit options for dropdown
 const AnimalStatus = [
@@ -20,6 +21,8 @@ const AnimalStatus = [
 
 const EditAnimal = () => {
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const navigate = useNavigate();
 
   const [animal, setAnimal] = useState({
@@ -33,7 +36,7 @@ const EditAnimal = () => {
   const fetchAnimalById = async () => {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      `${BaseUrl}/fetch-animalType-by-id/${id}`,
+      `${BaseUrl}/fetch-animalType-by-id/${decryptedId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -46,9 +49,9 @@ const EditAnimal = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["AnimalListId", id],
+    queryKey: ["AnimalListId", decryptedId],
     queryFn: fetchAnimalById,
-    enabled: !!id, // Ensure the query only runs if id exists
+    enabled: !!decryptedId, // Ensure the query only runs if id exists
   });
 
   // Set fetched data to state when available
@@ -83,7 +86,7 @@ const EditAnimal = () => {
       setIsButtonDisabled(true);
       try {
         const res = await axios.put(
-          `${BaseUrl}/update-animalType/${id}`,
+          `${BaseUrl}/update-animalType/${decryptedId}`,
           data,
           {
             headers: {

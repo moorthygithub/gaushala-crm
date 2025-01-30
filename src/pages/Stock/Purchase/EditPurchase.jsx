@@ -8,7 +8,11 @@ import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import { BaseUrl } from "../../../base/BaseUrl";
 import { Input } from "@material-tailwind/react";
-import { inputClass, inputClassBack } from "../../../components/common/Buttoncss";
+import {
+  inputClass,
+  inputClassBack,
+} from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -19,7 +23,9 @@ const unitOptions = [
 
 const EditPurchase = () => {
   const navigate = useNavigate();
+  // const { id } = useParams();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
   const [purchase, setPurchase] = useState({
@@ -35,10 +41,20 @@ const EditPurchase = () => {
     purchase_sub_qnty: "",
     purchase_sub_unit: "",
   };
+  console.log("Decrypted ID:", decryptedId);
 
   const [users, setUsers] = useState([initialUserTemplate]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  // const secretKey = "AGSOLUTION@123";
 
+  // const decryptId = (encryptedId) => {
+  //   const bytes = CryptoJS.AES.decrypt(
+  //     decodeURIComponent(encryptedId),
+  //     secretKey
+  //   );
+  //   return bytes.toString(CryptoJS.enc.Utf8);
+  // };
+  // const decryptedId = decryptId(id);
   useEffect(() => {
     const fetchVendorData = async () => {
       const response = await axios.get(`${BaseUrl}/fetch-vendor`, {
@@ -60,7 +76,7 @@ const EditPurchase = () => {
 
     const fetchPurchaseData = async () => {
       const response = await axios.get(
-        `${BaseUrl}/fetch-purchase-by-id/${id}`,
+        `${BaseUrl}/fetch-purchase-by-id/${decryptedId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -74,7 +90,7 @@ const EditPurchase = () => {
     fetchVendorData();
     fetchItemData();
     fetchPurchaseData();
-  }, [id]);
+  }, [decryptedId]);
 
   const onInputChange = (e) => {
     setPurchase({
@@ -114,11 +130,15 @@ const EditPurchase = () => {
     if (isValid) {
       setIsButtonDisabled(true);
       try {
-        const res = await axios.put(`${BaseUrl}/update-purchase/${id}`, data, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const res = await axios.put(
+          `${BaseUrl}/update-purchase/${decryptedId}`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         if (res.data.code == "200") {
           toast.success("Purchase Updated Successfully");
           navigate("/purchase");

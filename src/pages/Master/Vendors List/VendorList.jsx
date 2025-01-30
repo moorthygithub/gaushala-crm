@@ -11,6 +11,7 @@ import {
   EditVendorItem,
 } from "../../../components/ButtonComponents";
 import { inputClass } from "../../../components/common/Buttoncss";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const VendorList = () => {
   const [overdueListData, setOverdueListData] = useState([]);
@@ -101,7 +102,11 @@ const VendorList = () => {
           return (
             <div className="flex items-center space-x-2">
               <EditVendorItem
-                onClick={() => navigate(`/EditVendors/${id}`)}
+                // onClick={() => navigate(`/EditVendors/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/EditVendors/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
             </div>

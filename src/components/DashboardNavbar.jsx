@@ -13,6 +13,7 @@ import { FaLock } from "react-icons/fa6";
 import { toast } from "react-toastify";
 
 import { inputClass } from "../components/common/Buttoncss";
+import { AddCashReceipt } from "./ButtonComponents";
 
 const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
   const { pathname } = useLocation();
@@ -195,7 +196,10 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
           </div>
 
           <div className="flex items-center">
-            {/* profile icon  */}
+            <AddCashReceipt
+              onClick={() => navigate("/cashrecepitall")}
+              className={inputClass}
+            />
 
             <IconButton variant="text" color="orange" onClick={handleopen}>
               <UserCircleIcon className="h-5 w-5 text-red" />

@@ -21,6 +21,7 @@ function ViewMaterialRecepit() {
   const [donor, setDonor] = useState(null);
   const [recepitsub, setRecepitsub] = useState([]);
   const { id } = useParams();
+  
   const navigate = useNavigate();
   const [emailloading, setEmailloading] = useState(false);
 
@@ -115,25 +116,6 @@ function ViewMaterialRecepit() {
             Material Receipt
           </h1>
           <div className="flex space-x-3">
-            <button
-              onClick={() => navigate("/materialrecepitall")}
-              type="button"
-              className={inputClass}
-            >
-              + Create Receipt
-            </button>
-            <button
-              onClick={() => navigate("/donor-list")}
-              type="button"
-              className={inputClass}
-            >
-              + Donor List
-            </button>
-          </div>
-        </div>
-
-        {receipts && (
-          <div>
             <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4">
               <PdfDownloadInMaterialRecepit
                 onClick={downloadReceipt}
@@ -144,6 +126,52 @@ function ViewMaterialRecepit() {
                 className=" text-sm font-[400] cursor-pointer   text-white bg-green-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
               />
               {/* Email Section */}
+              {donor?.donor_email ? (
+                <div
+                  className={`${inputClass} flex flex-col items-center text-center`}
+                >
+                  <a
+                    onClick={sendEmail}
+                    className="flex items-center space-x-2"
+                  >
+                    <MdEmail className="text-lg" />
+                    <span>
+                      {emailloading ? "Sending..." : "Send Email"}
+
+                      {receipts?.m_receipt_email_count == null
+                        ? "(0)"
+                        : `(${receipts.m_receipt_email_count})`}
+                    </span>{" "}
+                  </a>
+                </div>
+              ) : (
+                <p style={{ color: "red" }} className="cursor-pointer">
+                  <i className="mr-10 ti-email"></i> Email not found
+                </p>
+              )}
+
+              <button
+                className={`${inputClass} flex  justify-center items-center gap-1`}
+                onClick={printReceipt}
+              >
+                <IoIosPrint className="text-lg" />
+                <span>Print Receipt</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {receipts && (
+          <div>
+            {/* <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4">
+              <PdfDownloadInMaterialRecepit
+                onClick={downloadReceipt}
+                className=" text-sm font-[400] cursor-pointer   text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              />
+              <WhatsappInMaterialRecepit
+                onClick={whatsApp}
+                className=" text-sm font-[400] cursor-pointer   text-white bg-green-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              />
               {donor?.donor_email ? (
                 <div
                   className={`${inputClass} flex flex-col items-center text-center`}
@@ -176,7 +204,6 @@ function ViewMaterialRecepit() {
                 </p>
               )}
 
-              {/* Print Receipt */}
               <button
                 className={`${inputClass} flex items-center gap-1`}
                 onClick={printReceipt}
@@ -184,7 +211,7 @@ function ViewMaterialRecepit() {
                 <IoIosPrint className="text-lg" />
                 <span>Print Receipt</span>
               </button>
-            </div>
+            </div> */}
 
             <hr />
 
