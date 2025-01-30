@@ -12,6 +12,7 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const status = [
   {
@@ -26,6 +27,7 @@ const status = [
 
 const EditVendors = () => {
   const { id } = useParams();
+  const decryptedId = decryptId(id);
   const navigate = useNavigate();
   const [vendor, setVendor] = useState({
     vendor_name: "",
@@ -36,6 +38,7 @@ const EditVendors = () => {
     vendor_status: "",
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // Button state for disable/enable
+  // console.log("Decrypted ID:", decryptedId);
 
   const handleBackButton = () => {
     navigate("/VendorList");
@@ -69,7 +72,7 @@ const EditVendors = () => {
   useEffect(() => {
     if (id) {
       axios({
-        url: `${BaseUrl}/fetch-vendor-by-id/${id}`,
+        url: `${BaseUrl}/fetch-vendor-by-id/${decryptedId}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -82,7 +85,7 @@ const EditVendors = () => {
           toast.error("Failed to fetch vendor details");
         });
     }
-  }, [id]);
+  }, [decryptedId]);
 
   // Handle form submission
   const onSubmit = (e) => {
@@ -100,7 +103,7 @@ const EditVendors = () => {
       setIsButtonDisabled(true);
 
       axios({
-        url: `${BaseUrl}/update-vendor/${id}`,
+        url: `${BaseUrl}/update-vendor/${decryptedId}`,
         method: "PUT",
         data,
         headers: {

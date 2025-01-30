@@ -20,10 +20,13 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const EditDuplicate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [donorName, setDonorName] = useState("");
   const [donor, setDonor] = useState({
     donor_fts_id: "",
@@ -36,7 +39,6 @@ const EditDuplicate = () => {
     indicomp_donor_type: "",
     indicomp_related_id: "",
   });
-  console.log(id, "Params");
   // States to control the dialog
   const [showDialog, setShowDialog] = useState(false);
   const [donorData, setDonorData] = useState([]);
@@ -87,7 +89,7 @@ const EditDuplicate = () => {
     };
 
     axios
-      .put(`${BaseUrl}/update-donors-duplicate/${id}`, data, {
+      .put(`${BaseUrl}/update-donors-duplicate/${decryptedId}`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -124,7 +126,7 @@ const EditDuplicate = () => {
 
   useEffect(() => {
     axios
-      .get(`${BaseUrl}/fetch-donors-duplicate-by-id/${id}`, {
+      .get(`${BaseUrl}/fetch-donors-duplicate-by-id/${decryptedId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => setDonor(res.data.individualCompanies));

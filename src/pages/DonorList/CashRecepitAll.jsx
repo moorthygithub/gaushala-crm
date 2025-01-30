@@ -14,6 +14,7 @@ import { CircularProgress, FormLabel } from "@mui/material";
 import Dropdown from "../../components/common/DropDown";
 import FamilyDropDown from "../../components/common/TextField/FamilyDropDown";
 import { inputClass, inputClassBack } from "../../components/common/Buttoncss";
+import { AddDonor } from "../../components/ButtonComponents";
 
 // Unit options for dropdown
 const unitOptions = [
@@ -683,6 +684,15 @@ const CashRecepitAll = () => {
                     id: donor.donor_fts_id,
                   }))}
                   loading={donorListData.length === 0}
+                  noOptionsText={
+                    <span className="flex items-center justify-between w-full">
+                      No Donor
+                      <AddDonor
+                        onClick={() => navigate("/add-donor")}
+                        className={inputClass}
+                      />
+                    </span>
+                  }
                   renderOption={(props, option) => (
                     <li {...props} key={option.id}>
                       {option.label}

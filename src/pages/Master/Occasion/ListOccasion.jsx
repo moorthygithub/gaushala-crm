@@ -11,6 +11,7 @@ import {
   EditOccassionItem,
 } from "../../../components/ButtonComponents";
 import { inputClass } from "../../../components/common/Buttoncss";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const ListOccasion = () => {
   const [openListData, setOpenListData] = useState([]);
@@ -77,7 +78,11 @@ const ListOccasion = () => {
           return (
             <div className="flex items-center space-x-2">
               <EditOccassionItem
-                onClick={() => navigate(`/edit-occasion/${id}`)}
+                // onClick={() => navigate(`/edit-occasion/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/edit-occasion/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
             </div>

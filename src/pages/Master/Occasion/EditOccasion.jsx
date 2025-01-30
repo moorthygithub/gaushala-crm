@@ -10,6 +10,7 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const status = [
   {
@@ -24,6 +25,8 @@ const status = [
 
 const EditOccasion = () => {
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const navigate = useNavigate();
   const [occasion, setOccasion] = useState({
     occasion_name: "",
@@ -63,9 +66,9 @@ const EditOccasion = () => {
   };
 
   useEffect(() => {
-    if (id) {
+    if (decryptedId) {
       axios({
-        url: BaseUrl + "/fetch-occasion-by-id/" + id,
+        url: BaseUrl + "/fetch-occasion-by-id/" + decryptedId,
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -78,7 +81,7 @@ const EditOccasion = () => {
           toast.error("Failed to fetch item details");
         });
     }
-  }, [id]);
+  }, [decryptedId]);
 
   // Handle form submission
   const onSubmit = (e) => {
@@ -95,7 +98,7 @@ const EditOccasion = () => {
       setIsButtonDisabled(true);
 
       axios({
-        url: BaseUrl + "/update-occasion/" + id,
+        url: BaseUrl + "/update-occasion/" + decryptedId,
         method: "PUT",
         data,
         headers: {

@@ -1,566 +1,195 @@
-<table className="w-full border-collapse border border-gray-200 mb-[10px] text-sm">
-  <thead>
-    <tr className="bg-gray-200">
-      {TABLE_HEAD.map((head) => (
-        <th className="border p-2">{thead}</th>
-      ))}
-    </tr>
-  </thead>
-  <tbody>
-    {donorfam.length === 0 ? (
-      <tr>
-        <td colSpan="4" className="border p-2 text-center text-gray-500">
-          No data available
-        </td>
-      </tr>
-    ) : (
-      donorfam.map((stockItem, index) => (
-        <tr key={index} className="border">
-          <td className="border p-2 "> {stockItem.family_full_name}</td>
-          <td className="border p-2 text-center">
-            {" "}
-            {stockItem.family_relation}
-          </td>
-          <td className="border p-2 text-center">
-            {" "}
-            {moment(stockItem.c_receipt_date).format("DD-MM-YYYY")}
-          </td>
-          <td className="border p-2 text-center">
-            {" "}
-            {stockItem.c_receipt_total_amount}
-          </td>
-        </tr>
-      ))
-    )}
-  </tbody>
-</table>;
-import React, { useState, useEffect } from "react";
-import CountUp from "react-countup";
-import { Doughnut } from "react-chartjs-2";
-import { NumericFormat } from "react-number-format";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Layout from "../../../layout/Layout";
+import DeliveryFilter from "../../../components/DeliveryFilter";
 import { useNavigate } from "react-router-dom";
-import { BaseUrl } from "../../base/BaseUrl";
-import { Chart, ArcElement, registerables } from "chart.js";
-import Layout from "../../layout/Layout";
-import ApexCharts from "apexcharts";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import { motion } from "framer-motion";
-
+import axios from "axios";
+import { BaseUrl } from "../../../base/BaseUrl";
+import MUIDataTable from "mui-datatables";
+import moment from "moment";
+import { Spinner } from "@material-tailwind/react";
 import {
-  Building2,
-  IndianRupee,
-  PieChart,
-  RefreshCcw,
-  User,
-  Users,
-  X,
-} from "lucide-react";
-import { MdOutlineWebhook } from "react-icons/md";
-import { GrTasks } from "react-icons/gr";
-import toast from "react-hot-toast";
+  AddPurchase,
+  EditPurchase,
+} from "../../../components/ButtonComponents";
+import { inputClass } from "../../../components/common/Buttoncss";
+import CryptoJS from "crypto-js";
 
-import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-} from "chart.js";
+const PurchaseList = () => {
+  const [pendingDListData, setPendingDListData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-// Registering necessary components in Chart.js
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement
-);
-//new
-const DashboardCard = ({ title, value, icon: Icon, color }) => (
-  <div className="bg-white rounded-lg overflow-hidden shadow-sm">
-    <div className="p-6 border-b border-gray-100">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
-          <h3 className="text-2xl font-bold text-gray-900">
-            <CountUp end={value} separator="," />
-          </h3>
-        </div>
-        <div
-          className={`w-12 h-12 flex items-center justify-center rounded-full ${color}`}
-        >
-          <Icon className="w-6 h-6 text-white" />
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  const secretKey = "!^&^!&!apicall1209437477436@%%@&&!&!";
 
-// /bar chart
-const BarChartComponent = ({ data }) => {
-  if (!data) return <div>Loading...</div>;
-
-  // Data for Bar chart (from graphbar)
-  const barData = {
-    labels: data.graphbar.map((item) => item.c_receipt_sub_donation_type), // Donation types (X-axis)
-    datasets: [
-      {
-        label: "Total Amount",
-        data: data.graphbar.map((item) => item.total_amount), // Total amounts (Y-axis for total amount)
-        backgroundColor: "#4BC0C0", // Bar color
-        borderColor: "#36A2EB", // Border color
-        borderWidth: 1,
-      },
-      {
-        label: "Total Receipt Count",
-        data: data.graphbar.map((item) => item.total_recipt_count), // Receipt counts (Y-axis for receipt count)
-        backgroundColor: "#FFCE56", // Bar color for receipt count
-        borderColor: "#FF6384", // Border color for receipt count
-        borderWidth: 1,
-      },
-    ],
+  // Encrypting the request payload
+  const encryptRequest = (data) => {
+    return CryptoJS.AES.encrypt(data, secretKey).toString();
   };
 
-  return (
-    <div>
-      <h2>Donation by Type</h2>
-      <Bar
-        data={barData}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "top",
-            },
-            tooltip: {
-              callbacks: {
-                label: (context) => {
-                  let label = context.dataset.label || "";
-                  if (label) {
-                    label += ": ";
-                  }
-                  label += context.raw;
-                  return label;
-                },
-              },
-            },
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: "Donation Types",
-              },
-            },
-            y: {
-              title: {
-                display: true,
-                text: "Amount/Count",
-              },
-            },
-          },
-        }}
-      />
-    </div>
-  );
-};
+  // Decrypt the response
+  const decryptResponse = (encryptedData) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+    return bytes.toString(CryptoJS.enc.Utf8); // Decrypts and returns the string
+  };
 
-const NewsDashboard = () => {
-  Chart.register(ArcElement, ...registerables);
-
-  const [results, setResults] = useState([]);
-  const [stock, setStock] = useState([]);
-  const [graphData, setGraphData] = useState(null);
-  const [isBarVisible, setIsBarVisible] = useState(true);
-  const [isBarMinimized, setIsBarMinimized] = useState(false);
-  const [barChartInstance, setBarChartInstance] = useState(null);
-  const [isPieVisible, setIsPieVisible] = useState(true);
-  const [isPieMinimized, setIsPieMinimized] = useState(false);
-  const [currentYear, setCurrentYear] = useState("");
-
-  const [data, setData] = useState([]);
-  const [graph1, setGraph1] = useState([]);
-  const [graph2, setGraph2] = useState([]);
-  const [graph3, setGraph3] = useState([]);
-  const [graph4, setGraph4] = useState([]);
-  const token = localStorage.getItem("token");
-
-  const dateyear = currentYear;
   useEffect(() => {
-    const fetchYearData = async () => {
+    const fetchOpenData = async () => {
       try {
-        const response = await axios.get(`${BaseUrl}/fetch-year`, {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+
+        // Example: Encrypt the endpoint and any query parameters (e.g., page number, ID)
+        const encryptedUrl = encryptRequest("fetch-purchase-list");
+
+        const response = await axios.get(`${BaseUrl}/fetch-purchase-list`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            encryptedUrl, // Send encrypted data as a parameter
           },
         });
 
-        setCurrentYear(response.data.year.current_year);
-        console.log(response.data.year.current_year);
+        if (response.status === 200) {
+          // Assuming the server sends back encrypted data that needs to be decrypted
+          const decryptedData = response.data.purchase.map((item) => {
+            return {
+              ...item,
+              vendor_name: decryptResponse(item.vendor_name),
+              purchase_bill_no: decryptResponse(item.purchase_bill_no),
+            };
+          });
+
+          setPendingDListData(decryptedData);
+        }
       } catch (error) {
-        console.error("Error fetching year data:", error);
+        console.error("Error fetching purchase list data", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchYearData();
+    fetchOpenData();
   }, []);
 
-  const fetchData = async () => {
-    if (currentYear) {
-      try {
-        const res = await axios({
-          url: `${BaseUrl}/fetch-dashboard-data-by/${currentYear}`,
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        setResults(res.data);
-        setStock(res.data.stock);
-        setData(res.data.graphbar);
-        // Extract bar and pie chart data
-        const barLabels = res.data.graphbar.map(
-          (item) => item.c_receipt_sub_donation_type
-        );
-        const barValues = res.data.graphbar.map((item) =>
-          parseInt(item.total_amount)
-        );
-        const pieLabels = res.data.graphpie.map(
-          (item) => item.c_receipt_tran_pay_mode
-        );
-        const pieValues = res.data.graphpie.map((item) =>
-          parseInt(item.total_amount)
-        );
-
-        // Set chart data
-        setGraph1(barLabels);
-        setGraph2(barValues);
-        setGraph3(pieLabels);
-        setGraph4(pieValues);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      }
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, [currentYear]);
-  const handleReload = () => {
-    console.log("Reloading data...");
-    fetchData();
-  };
-
-  // useEffect(() => {
-  //   if (graph1.length > 0 && graph2.length > 0) {
-  //     setGraphData({
-  //       labels: graph1,
-  //       datasets: [
-  //         {
-  //           data: graph2,
-  //           backgroundColor: [
-  //             "#1C64F2",
-  //             "#16BDCA",
-  //             "#FDBA8C",
-  //             "#E74694",
-  //             "#F59E0B",
-  //             "#10B981",
-  //             "#6366F1",
-  //           ],
-  //           hoverBackgroundColor: [
-  //             "#1654C0",
-  //             "#13A5B0",
-  //             "#FC9D7C",
-  //             "#D93B84",
-  //             "#E78F0A",
-  //             "#0F9872",
-  //             "#5458E0",
-  //           ],
-  //         },
-  //       ],
-  //     });
-  //   }
-  // }, [graph1, graph2]);
-
-  // const renderBarChart = () => {
-  //   if (!graphData || graphData.datasets[0].data.length === 0) {
-  //     return;
-  //   }
-
-  //   if (barChartInstance) {
-  //     barChartInstance.destroy();
-  //   }
-
-  //   const chartConfig = {
-  //     series: [
-  //       { name: "Donation Distribution", data: graphData.datasets[0].data },
-  //     ],
-  //     chart: { type: "bar", height: 360, toolbar: { show: false } },
-  //     dataLabels: { enabled: false },
-  //     colors: ["#020617"],
-  //     plotOptions: { bar: { columnWidth: "40%", borderRadius: 2 } },
-  //     xaxis: {
-  //       categories: graphData.labels,
-  //       labels: {
-  //         style: { colors: "#616161", fontSize: "12px", fontWeight: 400 },
-  //       },
-  //     },
-  //     yaxis: {
-  //       labels: {
-  //         style: { colors: "#616161", fontSize: "12px", fontWeight: 400 },
-  //       },
-  //     },
-  //     grid: {
-  //       show: true,
-  //       borderColor: "#dddddd",
-  //       padding: { top: 5, right: 20 },
-  //     },
-  //     tooltip: { theme: "dark" },
-  //   };
-
-  //   const chart = new ApexCharts(
-  //     document.querySelector("#bar-chart"),
-  //     chartConfig
-  //   );
-  //   chart.render();
-  //   setBarChartInstance(chart);
-  // };
-
-  // useEffect(() => {
-  //   if (
-  //     graphData &&
-  //     graphData.datasets[0].data.length > 0 &&
-  //     isBarVisible &&
-  //     !isBarMinimized
-  //   ) {
-  //     renderBarChart();
-  //   }
-  // }, [graphData, isBarVisible, isBarMinimized]);
-
-  // useEffect(() => {
-  //   if (graphData && isBarVisible && !isBarMinimized) {
-  //     renderBarChart();
-  //   }
-  // }, [graphData, isBarVisible, isBarMinimized]);
-  //new
-
-  const cardConfig = [
+  const columns = [
     {
-      title: "Total Donors",
-      value: results.total_donor_count,
-      icon: Users,
-      color: "bg-blue-600",
+      name: "sno",
+      label: "S.No",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta) => tableMeta.rowIndex + 1,
+      },
     },
     {
-      title: "Total Website Donation",
-      value: results.total_website_donation,
-      icon: MdOutlineWebhook,
-      color: "bg-green-600",
+      name: "Date",
+      label: " Date ",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value) => moment(value).format("DD-MM-YYYY"),
+      },
     },
     {
-      title: "Total Material Donation",
-      value: results.total_material_donation,
-      icon: GrTasks,
-      color: "bg-purple-600",
+      name: "vendor_name",
+      label: " Vendor ",
+      options: {
+        filter: false,
+        sort: false,
+      },
     },
     {
-      title: "Total Donation",
-      value: results.total_donation,
-      icon: IndianRupee,
-      color: "bg-amber-600",
+      name: "purchase_bill_no",
+      label: " Bill No ",
+      options: {
+        filter: false,
+        sort: false,
+      },
+    },
+    {
+      name: "purchase_total_bill",
+      label: " Total Amount ",
+      options: {
+        filter: false,
+        sort: false,
+      },
+    },
+    {
+      name: "purchase_count",
+      label: " No of Item ",
+      options: {
+        filter: false,
+        sort: false,
+      },
+    },
+
+    {
+      name: "id",
+      label: "Action",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (id) => {
+          return (
+            <div className="flex items-center space-x-2">
+              <EditPurchase
+                onClick={() => {
+                  const encryptedId = encryptRequest(id); // Encrypt the ID
+                  navigate(`/edit-purchase/${encodeURIComponent(encryptedId)}`);
+                }}
+                className="h-5 w-5 cursor-pointer text-blue-500"
+              />
+            </div>
+          );
+        },
+      },
     },
   ];
 
-  useEffect(() => {
-    if (graph1.length > 0) {
-      setGraphData({
-        labels: graph1,
-        datasets: [
-          {
-            data: graph2,
-            backgroundColor: [
-              "#3b82f6", // blue-500
-              "#f59e0b", // amber-500
-              "#10b981", // emerald-500
-              "#6366f1", // indigo-500
-            ],
-            hoverBackgroundColor: [
-              "#2563eb", // blue-600
-              "#d97706", // amber-600
-              "#059669", // emerald-600
-              "#4f46e5", // indigo-600
-            ],
-          },
-        ],
-      });
-    }
-  }, [graph1, graph2]);
+  const options = {
+    selectableRows: "none",
+    elevation: 0,
+
+    responsive: "standard",
+    viewColumns: true,
+    download: false,
+    print: false,
+    filter: false,
+    customToolbar: () => {
+      return (
+        <AddPurchase
+          onClick={() => navigate("/add-purchase")}
+          className={inputClass}
+        />
+      );
+    },
+  };
 
   return (
     <Layout>
-      <div className="news-dashboard-wrapper mt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {cardConfig.map((card, index) => (
-            <DashboardCard
-              key={index}
-              title={card.title}
-              value={card.value}
-              icon={card.icon}
-              color={card.color}
-            />
-          ))}
+      <DeliveryFilter />
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner className="h-6 w-6" />
         </div>
-
-        <h3 className="mt-8 text-3xl font-bold text-gray-800 text-center">
-          Current Month Stocks (in Kgs)
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8 mt-6 px-4">
-          {stock.map((value, index) => (
-            <motion.div
-              key={index}
-              initial={{ x: index % 2 === 0 ? -100 : 100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-tl from-indigo-400 to-indigo-300 text-white p-6 rounded-xl shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-            >
-              <div className="flex flex-col items-center justify-center">
-                <span className="text-3xl font-extrabold mb-3">
-                  <NumericFormat
-                    thousandSeparator={true}
-                    thousandsGroupStyle="lakh"
-                    displayType="text"
-                    value={
-                      value.openpurch -
-                      value.closesale +
-                      (value.purch - value.sale)
-                    }
-                  />
-                </span>
-                <span className="block text-sm text-indigo-100 mb-4">
-                  {value.item_name}
-                </span>
+      ) : (
+        <div className="mt-5">
+          <MUIDataTable
+            title={
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-semibold"> Purchase List</span>
               </div>
-              <div className="border-t border-white pt-4 text-center">
-                <span className="text-md font-semibold text-white opacity-80">
-                  {value.item_name} Stock
-                </span>
-              </div>
-            </motion.div>
-          ))}
+            }
+            data={pendingDListData ? pendingDListData : []}
+            columns={columns}
+            options={options}
+          />
         </div>
-
-        <div className="news-dashboard-wrapper mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div>
-              {isPieVisible && (
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                  <div className="p-3 border-b border-gray-100 flex justify-between items-center">
-                    <div className="flex items-center gap-1">
-                      <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
-                        <PieChart className="w-5 h-5 text-purple-600" />
-                      </div>
-                      <h2 className="text-lg font-bold text-gray-900">
-                        Cash Receipts
-                      </h2>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleReload}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <RefreshIcon className="h-5 w-5 text-gray-500" />
-                      </button>
-                      <button
-                        onClick={() => setIsPieVisible(false)}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <X className="h-5 w-5 text-gray-500" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    {graphData && (
-                      <Doughnut
-                        data={graphData}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              position: "bottom",
-                            },
-                          },
-                          cutout: "70%",
-                        }}
-                        height={150}
-                      />
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div>
-              {isBarVisible && (
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                  <div className="p-3 border-b border-gray-100 flex justify-between items-center">
-                    <div className="flex items-center gap-1">
-                      <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
-                        <PieChart className="w-5 h-5 text-purple-600" />
-                      </div>
-                      <h2 className="text-lg font-bold text-gray-900">
-                        Cash Receipts
-                      </h2>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleReload}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <RefreshIcon className="h-5 w-5 text-gray-500" />
-                      </button>
-                      <button
-                        onClick={() => setIsBarVisible(false)}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <X className="h-5 w-5 text-gray-500" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    {/* {graphData && (
-                      <Doughnut
-                        data={graphData}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              position: "bottom",
-                            },
-                          },
-                          cutout: "70%",
-                        }}
-                        height={150}
-                      />
-                    )} */}
-                    <BarChartComponent data={data} />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </Layout>
   );
 };
 
-export default NewsDashboard;
+export default PurchaseList;

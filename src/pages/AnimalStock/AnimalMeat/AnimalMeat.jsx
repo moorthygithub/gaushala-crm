@@ -15,6 +15,7 @@ import { BaseUrl } from "../../../base/BaseUrl";
 import AnimalStockFilter from "../../../components/common/AnimalStockFilter";
 import moment from "moment";
 import { inputClass } from "../../../components/common/Buttoncss";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const fetchAnimalMeetList = async () => {
   const token = localStorage.getItem("token");
@@ -95,7 +96,13 @@ const AnimalMeat = () => {
         customBodyRender: (id) => (
           <div className="flex items-center space-x-2">
             <EditAnimalMeet
-              onClick={() => navigate(`/edit-animal-meet/${id}`)}
+              // onClick={() => navigate(`/edit-animal-meet/${id}`)}
+              onClick={() => {
+                const encryptedId = encryptId(id); // Encrypt the ID
+                navigate(
+                  `/edit-animal-meet/${encodeURIComponent(encryptedId)}`
+                );
+              }}
               className="h-5 w-5 cursor-pointer text-blue-500"
             />
           </div>

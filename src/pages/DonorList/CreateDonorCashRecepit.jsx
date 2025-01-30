@@ -12,6 +12,7 @@ import { FormLabel } from "@mui/material";
 import Dropdown from "../../components/common/DropDown";
 import FamilyDropDown from "../../components/common/TextField/FamilyDropDown";
 import { inputClass, inputClassBack } from "../../components/common/Buttoncss";
+import { decryptId, encryptId } from "../../components/common/EncryptDecrypt";
 
 const unitOptions = [
   { value: "Kg", label: "Kg" },
@@ -156,6 +157,8 @@ const DonorDonationReceipt = () => {
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [userdata, setUserdata] = useState("");
 
   const [userfamilydata, setUserfFamilydata] = useState([]);
@@ -416,7 +419,6 @@ const DonorDonationReceipt = () => {
     };
 
     const isValid = document.getElementById("addIndiv").checkValidity();
-    console.log(data, "finaldat");
     if (isValid) {
       setIsButtonDisabled(true);
 
@@ -427,8 +429,10 @@ const DonorDonationReceipt = () => {
           },
         })
         .then((res) => {
-          if (res.status === 200 || res.data.code === "200") {
+          if (res.status == 200 || res.data.code == "200") {
             toast.success("Donor Created Successfully");
+            // const encryptedId = encryptId(res.data?.latestid?.id);
+            // console.log(encryptedId);
             setTimeout(() => {
               navigate(`/recepit-view/${res.data?.latestid?.id}`);
             }, 100);
@@ -464,7 +468,7 @@ const DonorDonationReceipt = () => {
 
   useEffect(() => {
     axios({
-      url: BaseUrl + "/fetch-donor-by-id/" + id,
+      url: BaseUrl + "/fetch-donor-by-id/" + decryptedId,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -472,7 +476,7 @@ const DonorDonationReceipt = () => {
     }).then((res) => {
       setUserdata(res.data.donor);
       setUserfFamilydata(res.data.familyMember);
-      console.log("datatable", res.data.donor);
+      // console.log("datatable", res.data.donor);
     });
   }, []);
   //DAY CLOSE
@@ -810,20 +814,22 @@ const DonorDonationReceipt = () => {
               </div>
             ))}
 
-            <div className="flex justify-start space-x-2">
-              <button
-                onClick={addItem}
-                className={`${inputClass} ${
-                  isAddMoreDisabled()
-                    ? "bg-gray-500 cursor-not-allowed opacity-50"
-                    : "bg-blue-600 hover:bg-blue-700"
-                } text-white  rounded-lg shadow-md`}
-                disabled={isAddMoreDisabled()}
-              >
-                Add More
-              </button>
+            <div className="flex justify-start">
+              <div className="flex justify-center items-center">
+                <button
+                  onClick={addItem}
+                  className={`${inputClass} ${
+                    isAddMoreDisabled()
+                      ? "bg-gray-500 cursor-not-allowed opacity-50"
+                      : "bg-blue-600 hover:bg-blue-700"
+                  } text-white rounded-lg shadow-md h-10 flex justify-center items-center px-4`}
+                  disabled={isAddMoreDisabled()}
+                >
+                  Add More
+                </button>
+              </div>
 
-              <div className="w-56 mt-4 ">
+              <div className="w-56 ">
                 <Input
                   type="text"
                   label="Total Amount"

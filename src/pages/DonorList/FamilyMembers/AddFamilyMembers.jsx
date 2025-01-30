@@ -13,11 +13,14 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 function AddFamilyMembers() {
   const navigate = useNavigate();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const donorid = localStorage.getItem("donor_fts_id");
+  console.log(donorid);
+
   const [donor, setDonor] = useState({
     family_full_name: "",
     donor_fts_id: "",
@@ -32,6 +35,10 @@ function AddFamilyMembers() {
   };
   //SUBMIT
 
+  const NavigateData = () => {
+    const encryptedId = encryptId(donorid); // Encrypt the ID
+    navigate(`/create-family/${encodeURIComponent(encryptedId)}`);
+  };
   const onSubmit = (e) => {
     let data = {
       family_full_name: donor.family_full_name,
@@ -52,7 +59,8 @@ function AddFamilyMembers() {
     }).then((res) => {
       if (res.data.code == "200") {
         toast.success("Family Member Created Sucessfully");
-        navigate(`/create-family/${donorid}`);
+        // navigate(`/create-family/${donorid}`);
+        NavigateData();
       } else {
         toast.error("Duplicate Entry");
       }

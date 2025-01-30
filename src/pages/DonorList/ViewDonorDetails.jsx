@@ -13,11 +13,14 @@ import {
 import moment from "moment";
 import { BaseUrl } from "../../base/BaseUrl";
 import { inputClass } from "../../components/common/Buttoncss";
+import { decryptId } from "../../components/common/EncryptDecrypt";
 const TABLE_HEAD = ["Full Name", "Relation"];
 
 const ViewDonorDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [donor, setDonor] = useState(null);
   const [donorfam, setDonorFam] = useState([]);
   const [company, setCompany] = useState([]);
@@ -27,11 +30,14 @@ const ViewDonorDetails = () => {
   useEffect(() => {
     const fetchRecepitData = async () => {
       try {
-        const res = await axios.get(`${BaseUrl}/fetch-donor-view-by-id/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const res = await axios.get(
+          `${BaseUrl}/fetch-donor-view-by-id/${decryptedId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         setDonor(res.data.donor);
         setDonorFam(res.data.family_member || []);
@@ -47,7 +53,7 @@ const ViewDonorDetails = () => {
     };
 
     fetchRecepitData();
-  }, [id]);
+  }, [decryptedId]);
 
   const handleBackButton = () => {
     navigate("/donor-list");

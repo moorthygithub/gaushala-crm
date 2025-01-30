@@ -13,6 +13,7 @@ import { Spinner } from "@material-tailwind/react";
 import {
   AddCashReceipt,
   AddDonor,
+  AddMaterialReceipt,
   CashReceiptDonor,
   EditDonor,
   FamilyMemberDonor,
@@ -21,6 +22,7 @@ import {
 } from "../../components/ButtonComponents";
 import { useQuery } from "@tanstack/react-query";
 import { inputClass, inputClassBack } from "../../components/common/Buttoncss";
+import { encryptId } from "../../components/common/EncryptDecrypt";
 
 const fetchOpenData = async () => {
   const token = localStorage.getItem("token");
@@ -83,27 +85,51 @@ const DonorList = () => {
           return (
             <div className="flex items-center space-x-2">
               <ViewDonor
-                onClick={() => navigate(`/viewdonor-list/${id}`)}
+                // onClick={() => navigate(`/viewdonor-list/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(
+                    `/viewdonor-list/${encodeURIComponent(encryptedId)}`
+                  );
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500 "
               />
 
               <EditDonor
-                onClick={() => navigate(`/edit-donor/${id}`)}
+                // onClick={() => navigate(`/edit-donor/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/edit-donor/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500 "
               />
 
               <CashReceiptDonor
-                onClick={() => navigate(`/createrecepit-donor/${id}`)}
+                // onClick={() => navigate(`/createrecepit-donor/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(
+                    `/createrecepit-donor/${encodeURIComponent(encryptedId)}`
+                  );
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500 mr-2"
               />
 
               <MaterialReceiptDonor
-                onClick={() => navigate(`/create-donor/${id}`)}
+                // onClick={() => navigate(`/create-donor/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/create-donor/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500 mr-2"
               />
 
               <FamilyMemberDonor
-                onClick={() => navigate(`/create-family/${id}`)}
+                // onClick={() => navigate(`/create-family/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/create-family/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500 mr-2"
               />
             </div>
@@ -124,8 +150,8 @@ const DonorList = () => {
     customToolbar: () => {
       return (
         <>
-          <AddCashReceipt
-            onClick={() => navigate("/cashrecepitall")}
+          <AddMaterialReceipt
+            onClick={() => navigate("/materialrecepitall")}
             className={inputClass}
           />
           <AddDonor

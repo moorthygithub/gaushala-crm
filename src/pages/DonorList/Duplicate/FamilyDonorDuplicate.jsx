@@ -20,10 +20,13 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const FamilyDonorDuplicate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [donorName, setDonorName] = useState("");
   const [donor, setDonor] = useState({
     donor_fts_id: "",
@@ -36,7 +39,6 @@ const FamilyDonorDuplicate = () => {
     indicomp_donor_type: "",
     indicomp_related_id: "",
   });
-  console.log(id, "Params");
   // States to control the dialog
   const [showDialog, setShowDialog] = useState(false);
   const [donorData, setDonorData] = useState([]);
@@ -77,7 +79,7 @@ const FamilyDonorDuplicate = () => {
 
     axios
       .put(
-        `${BaseUrl}/update-donors-duplicate-zero-receipt-family-member/${id}`,
+        `${BaseUrl}/update-donors-duplicate-zero-receipt-family-member/${decryptedId}`,
         data,
         {
           headers: {
@@ -117,13 +119,13 @@ const FamilyDonorDuplicate = () => {
 
   useEffect(() => {
     axios
-      .get(`${BaseUrl}/fetch-donors-duplicate-by-id/${id}`, {
+      .get(`${BaseUrl}/fetch-donors-duplicate-by-id/${decryptedId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => setDonor(res.data.individualCompanies));
 
     fetchDonorData();
-  }, [id]);
+  }, [decryptedId]);
 
   return (
     <Layout>

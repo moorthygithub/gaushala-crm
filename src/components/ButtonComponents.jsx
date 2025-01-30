@@ -226,6 +226,19 @@ export const AddCashReceipt = ({ onClick, className }) => {
   );
 };
 AddCashReceipt.page = "Donor";
+export const AddMaterialReceipt = ({ onClick, className }) => {
+  const userType = localStorage.getItem("user_type_id");
+
+  if (!shouldRenderButton("AddMaterialReceipt", userType, "active"))
+    return null;
+
+  return (
+    <button onClick={onClick} className={` ${className}`}>
+      + MaterialRecepit
+    </button>
+  );
+};
+AddMaterialReceipt.page = "Donor";
 export const AddDonor = ({ onClick, className }) => {
   const userType = localStorage.getItem("user_type_id");
 
@@ -691,6 +704,7 @@ export default {
   ViewDonor,
   AddDonor,
   AddCashReceipt,
+  AddMaterialReceipt,
   EditDonor,
   CashReceiptDonor,
   MaterialReceiptDonor,

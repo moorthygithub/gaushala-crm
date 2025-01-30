@@ -13,6 +13,7 @@ import {
   EditMaterialReceipt,
   ViewMaterialReceipt,
 } from "../../../components/ButtonComponents";
+import { encryptId } from "../../../components/common/EncryptDecrypt";
 
 const MaterialReceipts = () => {
   const [materialdata, setMaterialData] = useState(null);
@@ -97,11 +98,19 @@ const MaterialReceipts = () => {
             <div className="flex items-center space-x-2">
               <ViewMaterialReceipt
                 onClick={() => navigate(`/material-view/${id}`)}
+                // onClick={() => {
+                //   const encryptedId = encryptId(id); // Encrypt the ID
+                //   navigate(`/material-view/${encodeURIComponent(encryptedId)}`);
+                // }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
 
               <EditMaterialReceipt
-                onClick={() => navigate(`/material-edit/${id}`)}
+                // onClick={() => navigate(`/material-edit/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id); // Encrypt the ID
+                  navigate(`/material-edit/${encodeURIComponent(encryptedId)}`);
+                }}
                 className="h-5 w-5 cursor-pointer text-blue-500"
               />
             </div>

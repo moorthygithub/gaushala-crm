@@ -14,6 +14,7 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import { decryptId } from "../../../components/common/EncryptDecrypt";
 
 const unitOptions = [
   { value: "Kg", label: "Kg" },
@@ -24,6 +25,8 @@ const unitOptions = [
 const EditConsumption = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [items, setItems] = useState([]);
   const [cons, setCons] = useState({
     cons_date: "",
@@ -42,9 +45,12 @@ const EditConsumption = () => {
     };
 
     const fetchConsumptionData = async () => {
-      const response = await axios.get(`${BaseUrl}/fetch-cons-by-id/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(
+        `${BaseUrl}/fetch-cons-by-id/${decryptedId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setCons(response.data.cons);
       setUsers(response.data.consSub);
     };
@@ -80,9 +86,13 @@ const EditConsumption = () => {
 
     setIsButtonDisabled(true);
     try {
-      const response = await axios.put(`${BaseUrl}/update-cons/${id}`, data, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.put(
+        `${BaseUrl}/update-cons/${decryptedId}`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       if (response.data.code == 200) {
         toast.success("Consumption is Updated Successfully");
         navigate("/consumption");
