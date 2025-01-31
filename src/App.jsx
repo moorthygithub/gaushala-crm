@@ -75,12 +75,14 @@ import CreateAnimalDead from "./pages/AnimalStock/AnimalDead/CreateAnimalDead";
 import AnimalStocks from "./pages/AnimalStock/AnimalStocks/AnimalStocks";
 import AnimalStocksView from "./pages/AnimalStock/AnimalStocks/AnimalStocksView";
 const queryClient = new QueryClient();
-import { useQuery } from "@tanstack/react-query";
+import DisableRightClick from "./components/common/DisableRightClick";
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <>
+        <DisableRightClick />
+
         <ToastContainer />
         <Routes>
           <Route path="/" element={<SignIn />} />
@@ -142,10 +144,7 @@ const App = () => {
           <Route path="/VendorList" element={<VendorList />} />
           <Route path="/EditVendors/:id" element={<EditVendors />} />
           <Route path="/add-purchase" element={<AddPurchase />} />
-          <Route
-            path="/edit-purchase/:id"
-            element={<EditPurchase />}
-          />
+          <Route path="/edit-purchase/:id" element={<EditPurchase />} />
           <Route path="/add-consumption" element={<AddConsumption />} />
           <Route path="/edit-consumption/:id" element={<EditConsumption />} />
           {/* //STOCK */}
