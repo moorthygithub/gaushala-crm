@@ -29,6 +29,7 @@ const EditPurchase = () => {
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
   const [purchase, setPurchase] = useState({
+    purchase_count: "",
     purchase_date: "",
     purchase_vendor: "",
     purchase_bill_no: "",
@@ -118,6 +119,7 @@ const EditPurchase = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const data = {
+      purchase_count: purchase.purchase_count,
       purchase_date: purchase.purchase_date,
       purchase_vendor: purchase.purchase_vendor,
       purchase_bill_no: purchase.purchase_bill_no,

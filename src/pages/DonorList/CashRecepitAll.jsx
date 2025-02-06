@@ -410,7 +410,7 @@ const CashRecepitAll = () => {
     const requiredFields = [
       { field: donor.c_receipt_exemption_type, name: "Category" },
       { field: donor.c_receipt_tran_pay_mode, name: "Transaction Type" },
-      { field: donor.donor_fts_id, name: "Donor Name" },
+      { field: donor.donor_fts_id, name: "Donor Id is Missing" },
     ];
 
     const emptyFields = requiredFields.filter((item) => !item.field);
@@ -440,7 +440,6 @@ const CashRecepitAll = () => {
     };
 
     const isValid = document.getElementById("addIndiv").checkValidity();
-    console.log(data, "finaldat");
     if (isValid) {
       setIsButtonDisabled(true);
 
@@ -451,7 +450,7 @@ const CashRecepitAll = () => {
           },
         })
         .then((res) => {
-          if (res.status === 200 || res.data.code === "200") {
+          if (res.status == 200 || res.data.code == "200") {
             toast.success("Donor Created Successfully");
             setTimeout(() => {
               navigate(`/recepit-view/${res.data?.latestid?.id}`);

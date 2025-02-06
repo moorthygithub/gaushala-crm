@@ -390,6 +390,7 @@ const DonorDonationReceipt = () => {
     const requiredFields = [
       { field: donor.c_receipt_exemption_type, name: "Category" },
       { field: donor.c_receipt_tran_pay_mode, name: "Transaction Type" },
+      { field: donor.donor_fts_id, name: "Donor Id is Missing" },
     ];
 
     const emptyFields = requiredFields.filter((item) => !item.field);
