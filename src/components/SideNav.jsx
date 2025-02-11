@@ -11,6 +11,7 @@ import { FaCodePullRequest } from "react-icons/fa6";
 import { GrStorage, GrTasks } from "react-icons/gr";
 import { PiDownloadSimpleBold } from "react-icons/pi";
 import { GrUserSettings } from "react-icons/gr";
+import { motion } from "framer-motion";
 
 const SideNav = ({ openSideNav, setOpenSideNav }) => {
   const sidenavRef = useRef(null);
@@ -131,9 +132,20 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
           )}
         </ul>
       </div>
-      <div className="text-white flex justify-center text-[0.8rem]">
-        <h3>Updated on : 06-Feb-2025</h3>
-      </div>
+      {/* <div className="text-white flex justify-center text-[0.8rem]">
+        <h3>Updated on : 10-Feb-2025</h3>
+      </div> */}
+      <motion.div
+        className="text-white flex justify-center text-[0.8rem] font-semibold"
+        initial={{ opacity: 0, y: 20, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+          duration: 1,
+          ease: [0.25, 0.6, 0.3, 1],
+        }}
+      >
+        <h3>Updated on : 10-Feb-2025</h3>
+      </motion.div>
     </aside>
   );
 };
