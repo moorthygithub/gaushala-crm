@@ -12,12 +12,8 @@ import { FormLabel } from "@mui/material";
 import Dropdown from "../../components/common/DropDown";
 import FamilyDropDown from "../../components/common/TextField/FamilyDropDown";
 import { inputClass, inputClassBack } from "../../components/common/Buttoncss";
-import { decryptId, encryptId } from "../../components/common/EncryptDecrypt";
+import { decryptId } from "../../components/common/EncryptDecrypt";
 
-const unitOptions = [
-  { value: "Kg", label: "Kg" },
-  { value: "Ton", label: "Ton" },
-];
 const exemption = [
   {
     value: "80G",
@@ -157,6 +153,7 @@ const DonorDonationReceipt = () => {
   const [vendors, setVendors] = useState([]);
   const [items, setItems] = useState([]);
   const { id } = useParams();
+
   const decryptedId = decryptId(id);
 
   const [userdata, setUserdata] = useState("");
@@ -390,7 +387,7 @@ const DonorDonationReceipt = () => {
     const requiredFields = [
       { field: donor.c_receipt_exemption_type, name: "Category" },
       { field: donor.c_receipt_tran_pay_mode, name: "Transaction Type" },
-      { field: donor.donor_fts_id, name: "Donor Id is Missing" },
+      { field: userdata?.donor_fts_id, name: "Donor Id is Missing" },
     ];
 
     const emptyFields = requiredFields.filter((item) => !item.field);
