@@ -144,7 +144,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
           ease: [0.25, 0.6, 0.3, 1],
         }}
       >
-        <h3>Updated on : 10-Feb-2025</h3>
+        <h3>Updated on : 11-Feb-2025</h3>
       </motion.div>
     </aside>
   );
