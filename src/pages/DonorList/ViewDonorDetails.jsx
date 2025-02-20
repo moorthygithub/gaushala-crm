@@ -85,7 +85,7 @@ const ViewDonorDetails = () => {
             </div>
 
             <button
-              onClick={() => navigate(`/recepitdonor-list/${id}`)}
+              onClick={() => navigate(`/recepitdonor-list/${decryptedId}`)}
               className={inputClass}
             >
               + Receipts Details

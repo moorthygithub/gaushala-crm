@@ -10,6 +10,8 @@ import { Button } from "@material-tailwind/react";
 import { Autocomplete, TextField } from "@mui/material";
 import { inputClass, inputClassBack } from "../../components/common/Buttoncss";
 import { AddDonor } from "../../components/ButtonComponents";
+import { id } from "date-fns/locale/id";
+import moment from "moment";
 
 const unitOptions = [
   { value: "Kg", label: "Kg" },
@@ -46,19 +48,54 @@ const MaterialRecepitAll = () => {
   );
   const [check, setCheck] = useState(false);
 
+  // useEffect(() => {
+  //   var theLoginToken = localStorage.getItem("token");
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: "Bearer " + theLoginToken,
+  //     },
+  //   };
+
+  //   fetch(BaseUrl + "/fetch-m-receipt-date", requestOptions)
+  //     .then((response) => response.json())
+  //     .then((data) => setDayClose(data.latestdate.c_receipt_date));
+  // }, []);
   useEffect(() => {
-    var theLoginToken = localStorage.getItem("token");
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + theLoginToken,
-      },
+    const fetchReceiptDate = async () => {
+      try {
+        const theLoginToken = localStorage.getItem("token");
+
+        const requestOptions = {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + theLoginToken,
+          },
+        };
+
+        const response = await fetch(
+          BaseUrl + "/fetch-m-receipt-date",
+          requestOptions
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setDayClose(data.latestdate.c_receipt_date);
+        if (data.code == 200) {
+          toast.success(data.msg);
+        } else {
+        }
+        toast.error(data.msg);
+      } catch (error) {
+        console.error("Error fetching receipt date:", error.message);
+      }
     };
 
-    fetch(BaseUrl + "/fetch-m-receipt-date", requestOptions)
-      .then((response) => response.json())
-      .then((data) => setDayClose(data.latestdate.c_receipt_date));
+    fetchReceiptDate();
   }, []);
+
   const [donor, setDonor] = useState({
     indicomp_fts_id: "",
     donor_fts_id: "",
@@ -362,9 +399,15 @@ const MaterialRecepitAll = () => {
       },
     })
       .then((res) => {
-        console.log(res.data, "dayclose"); // Log the response data for debugging
-        // Set the new dayClose value
-        setDayClose(res.data.latestdate.c_receipt_date);
+        if (res.data.code == 200) {
+          toast.error(res.data.msg);
+          setDayClose(res.data.latestdate.c_receipt_date);
+        } else {
+          console.log(res.data, "dayclose");
+          toast.error(res.data.msg);
+        }
+
+        // setDayClose(res.data.latestdate.c_receipt_date);
       })
       .catch((error) => {
         console.error("Error updating receipt date:", error);
@@ -397,9 +440,7 @@ const MaterialRecepitAll = () => {
       },
     }).then((res) => {
       if (res.data.code == 401) {
-        NotificationManager.error(
-          "In that Date there is already Receipt is Created"
-        );
+        toast.error(res.data.msg);
       } else {
         setDayClose(res.data.latestdate.c_receipt_date);
       }
@@ -432,20 +473,15 @@ const MaterialRecepitAll = () => {
           </div>
 
           <div className="flex flex-col md:flex-row items-center md:space-x-4 mt-4 md:mt-0">
+            <p className="    font-semibold text-black">
+              Receipt Date: {moment(dayClose).format("DD-MM-YYYY")}({" "}
+              {currentYear})
+            </p>
             {localStorage.getItem("user_type_id") === "2" && (
               <button onClick={(e) => onDayOpen(e)} className={inputClass}>
                 + Day Open
               </button>
             )}
-
-            {/* <Button
-              disabled={dayClose === todayback}
-              onClick={dayClose !== todayback ? (e) => onDayClose(e) : null}
-              className="btn-get-started  bg-red-400"
-              color="danger"
-            >
-              + Day Close
-            </Button> */}
             <button
               disabled={dayClose === todayback}
               onClick={dayClose !== todayback ? onDayClose : null}
