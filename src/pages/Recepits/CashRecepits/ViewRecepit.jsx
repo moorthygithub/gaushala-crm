@@ -24,6 +24,7 @@ import {
   inputClass,
   inputClassBack,
 } from "../../../components/common/Buttoncss";
+import moment from "moment/moment";
 
 function ViewCashRecepit() {
   const [receipts, setReceipts] = useState(null);
@@ -171,8 +172,6 @@ function ViewCashRecepit() {
           </h1>
           <div className="flex space-x-3">
             <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4 p-3">
-              {/* Buttons for Download and WhatsApp */}
-
               <PdfDownloadIncashRecepit
                 onClick={downloadReceipt}
                 className={`${inputClass} w-[80px] flex items-center justify-center text-center`}
@@ -246,186 +245,141 @@ function ViewCashRecepit() {
 
         {receipts && (
           <div>
-            {/* <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4 p-3">
-
-              <PdfDownloadIncashRecepit
-                onClick={downloadReceipt}
-                className={`${inputClass} w-[80px] flex items-center justify-center text-center`}
-              />
-              <WhatsappIncashRecepit
-                onClick={whatsApp}
-                className={`${inputClass}  flex items-center justify-center text-center`}
-              />
-
-              {donor?.donor_email ? (
-                <>
-                  <div
-                    className={`${inputClass} flex flex-col items-center text-center`}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      <a onClick={sendEmail} className="flex items-center">
-                        <MdEmail className="text-lg" />
-                        <span>
-                          {emailloading ? "Sending..." : "Send Email"}{" "}
-                          {receipts?.c_receipt_email_count == null
-                            ? "(0)"
-                            : `(${receipts.c_receipt_email_count})`}
-                        </span>
-                      </a>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="flex flex-col items-start text-red-500">
-                  <p className="flex items-center">
-                    <span>Email not found</span>
-                  </p>
-                  <button onClick={openModal} className={inputClass}>
-                    Add Email
-                  </button>
-                </div>
-              )}
-
-              <Dialog open={showModal} handler={closeModal}>
-                <DialogHeader>Add Donor Email</DialogHeader>
-                <DialogBody>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter donor email"
-                    className="w-full px-3 py-2 mt-1 border rounded"
-                    name="donor_email"
-                  />
-                </DialogBody>
-                <DialogFooter>
-                  <Button color="blue" onClick={closeModal} className="mx-2">
-                    Cancel
-                  </Button>
-                  <Button color="green" onClick={onSubmitEmail}>
-                    Add Email
-                  </Button>
-                </DialogFooter>
-              </Dialog>
-
-              <button
-                className={`${inputClass} flex  justify-center items-center gap-1`}
-                onClick={printReceipt}
-              >
-                <IoIosPrint className="text-lg" />
-                <span>Print</span>
-              </button>
-            </div> */}
             <hr></hr>
 
-            <div className="flex justify-center mt-2">
-              <div className="p-4 w-full max-w-[90%] md:max-w-[80%] lg:max-w-[70%]">
-                <div className="border border-black">
-                  <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
-                    <div className="border-b border-r border-black px-4 py-2 flex items-center">
-                      <strong>Receipt No:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        {receipts.c_receipt_no}
-                      </p>
-                    </div>
-                    <div className="border-b border-black px-4 py-2 flex items-center">
-                      <strong>Date:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        {new Date(receipts.c_receipt_date).toLocaleDateString()}
-                      </p>
-                    </div>
+            <div className="flex justify-center mt-4">
+              <div className="p-6 w-full max-w-[90%] md:max-w-[80%] lg:max-w-[70%]">
+                <div className="border border-gray-300 shadow-lg rounded-xl bg-white overflow-hidden">
+                  {/* HEADER */}
+                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 flex justify-between items-center">
+                    <h2 className="text-lg font-semibold">Donation Receipt</h2>
+                    <span className="text-sm font-medium">
+                      Date:{" "}
+                      {moment(receipts.c_receipt_date).format("DD MMM YYYY")}
+                    </span>
                   </div>
 
-                  <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
-                    <strong>Received with thanks from:</strong>
-                    {receipts.family_full_check == "Yes" ? (
-                      <>
-                        <p className="text-black font-bold text-sm ml-2">
-                          {donor?.donor_title} {receipts?.family_full_name},{" "}
-                          {donor?.donor_city} - {donor?.donor_pin_code},{" "}
-                          {donor?.donor_state}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-black font-bold text-sm ml-2">
-                          {donor?.donor_title} {donor?.donor_full_name},{" "}
-                          {donor?.donor_city} - {donor?.donor_pin_code},{" "}
-                          {donor?.donor_state}
-                        </p>
-                      </>
-                    )}
-                    {/* <p className="text-black font-bold text-sm ml-2">
-                      {receipts.family_full_check === "Yes"
-                        ? `${donor?.donor_title} ${receipts?.family_full_name}, ${donor?.donor_city} - ${donor?.donor_pin_code}, ${donor?.donor_state}`
-                        : `${donor?.donor_title} ${donor?.donor_full_name}, ${donor?.donor_city} - ${donor?.donor_pin_code}, ${donor?.donor_state}`}
-                    </p> */}
-                  </div>
-
-                  <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
-                    <strong>Occasion of:</strong>
-                    <p className="text-black font-bold text-sm ml-2">
-                      {receipts.c_receipt_occasional}
-                    </p>
-                  </div>
-
-                  <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
-                    <strong>On Account of:</strong>
-                    {recepitsub.map((item, index) => (
-                      <div key={index} className="flex items-center">
-                        <p className="text-black font-bold text-sm ml-2">
-                          {item.c_receipt_sub_donation_type} -{" "}
-                          {item.c_receipt_sub_amount},
+                  {/* Receipt Details */}
+                  <div className="divide-y divide-gray-200">
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                      <div className="px-6 py-3 flex items-center">
+                        <strong className=" text-gray-800">Receipt No :</strong>
+                        <p className="text-[#2677d6] font-semibold ml-1">
+                          {receipts.c_receipt_no}
                         </p>
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
-                    <div className="border-b border-r border-black px-4 py-2 flex items-center">
-                      <strong>Pay Mode:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        {receipts.c_receipt_tran_pay_mode}
+                      <div className="px-6 py-3 flex items-center">
+                        <strong className=" text-gray-800">Reference :</strong>
+                        <p className="text-[#2677d6] font-semibold ml-1">
+                          {receipts.c_receipt_ref_no}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                      <div className="px-6 py-3 ">
+                        <strong className="text-gray-800">
+                          Received From:
+                        </strong>
+                        <p className="text-[#2677d6] font-semibold mt-1">
+                          {receipts.family_full_check === "Yes" ? (
+                            <>
+                              <span>
+                                {donor?.donor_title}{" "}
+                                {receipts?.family_full_name}
+                              </span>
+                              <br />
+                              <span>
+                                {donor?.donor_city} - {donor?.donor_pin_code}
+                              </span>
+                              <br />
+                              <span>{donor?.donor_state}</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>
+                                {donor?.donor_title} {donor?.donor_full_name}
+                              </span>
+                              <br />
+                              <span>
+                                {donor?.donor_city} - {donor?.donor_pin_code}
+                              </span>
+                              <br />
+                              <span>{donor?.donor_state}</span>
+                            </>
+                          )}
+                        </p>
+                      </div>
+                      <div className="py-3">
+                        <div className="px-6 py-2 flex items-center">
+                          <strong className="text-gray-800">Pay Mode :</strong>
+                          <p className="text-[#2677d6] font-semibold ml-1">
+                            {receipts.c_receipt_tran_pay_mode}
+                          </p>
+                        </div>
+                        <div className="px-6 flex items-center">
+                          <strong className=" text-gray-800">
+                            PAN No {""}:
+                          </strong>
+                          <p className="text-[#2677d6] font-semibold ml-1">
+                            {company?.company_pan_no}
+                          </p>
+                        </div>
+                        <div className="px-6 py-2 flex items-center">
+                          <strong className="text-gray-800">
+                            Occasion of :
+                          </strong>
+                          <p className="text-[#2677d6] font-semibold ml-1">
+                            {receipts.c_receipt_occasional}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="px-6 py-3">
+                      <strong className="text-gray-800">On Account of:</strong>
+                      <ul className="list-disc list-inside mt-1 space-y-1 marker:text-gray-800">
+                        {recepitsub.map((item, index) => (
+                          <li
+                            key={index}
+                            className="text-[#2677d6] font-semibold"
+                          >
+                            {item.c_receipt_sub_donation_type} - ₹
+                            {item.c_receipt_sub_amount}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="px-6 py-4 bg-gray-50 flex flex-wrap items-center">
+                      <strong className="text-gray-800">Amount:</strong>
+                      <p className="text-[#2677d6] font-bold ml-2">
+                        ₹{receipts.c_receipt_total_amount}/-
+                      </p>
+                      <p className="text-[#2677d6] font-medium ml-2 capitalize">
+                        ({amountInWords} Only)
                       </p>
                     </div>
-                    <div className="border-b border-black px-4 py-2 flex items-center">
-                      <strong>PAN:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        {company?.company_pan_no}
-                      </p>
-                    </div>
-                  </div>
 
-                  <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
-                    <strong>Reference:</strong>
-                    <p className="text-black font-bold text-sm ml-2">
-                      {receipts.c_receipt_ref_no}
-                    </p>
-                  </div>
-
-                  <div className="px-4 py-2 border-b border-black h-auto md:h-16 flex items-center">
-                    <strong>Amount:</strong>
-                    <p className="text-black font-bold text-sm ml-2">
-                      {receipts.c_receipt_total_amount}
-                    </p>{" "}
-                    /- (
-                    <p className="text-black font-bold text-sm capitalize">
-                      {amountInWords} Only)
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
-                    <div className=" border-black px-4 py-2 flex items-center">
-                      <strong>Donor Sign:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        ({donor?.donor_title} {donor?.donor_full_name})
-                      </p>
-                    </div>
-                    <div className=" border-black px-4 py-2 flex items-center">
-                      <strong>Receiver Sign:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        ({company?.company_authsign})
-                      </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                      <div className="px-6 py-3 mt-2">
+                        <strong className="text-gray-800">Donor Sign:</strong>
+                        <p className="text-[#2677d6] font-semibold mt-10 ml-16">
+                          {donor?.donor_title
+                            ? `(${donor?.donor_title} ${donor?.donor_full_name})`
+                            : ""}
+                        </p>
+                      </div>
+                      <div className="px-6 py-3">
+                        <strong className="text-gray-800">
+                          Receiver Sign:
+                        </strong>
+                        <p className="text-[#2677d6] font-semibold mt-10 ml-16">
+                          {company?.company_authsign
+                            ? `(${company?.company_authsign} )`
+                            : ""}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

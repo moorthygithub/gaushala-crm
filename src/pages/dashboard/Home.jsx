@@ -47,7 +47,7 @@ ChartJS.register(
 //new
 const DashboardCard = ({ title, value, icon: Icon, color }) => (
   <div className="bg-white rounded-lg overflow-hidden shadow-sm">
-    <div className="p-6 border-b border-gray-100">
+    <div className="p-4">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
@@ -68,7 +68,7 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => (
 // /bar chart
 const BarChartComponent = ({ data }) => {
   if (!data || !data.graphbar || data.graphbar.length === 0) {
-    return <div>No data available</div>;
+    return <div className="flex justify-center">No data available</div>;
   }
 
   const scaleFactor = 1000;
@@ -282,136 +282,144 @@ const NewsDashboard = () => {
             />
           ))}
         </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 text-center bg-white rounded-lg p-2 shadow-xl">
+              Current Month Stocks (in Kgs)
+            </h3>
 
-        <h3 className="mt-8 text-3xl font-bold text-gray-800 text-center">
-          Current Month Stocks (in Kgs)
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8 mt-6 px-4">
-          {stock.map((value, index) => (
-            <motion.div
-              key={index}
-              initial={{ x: index % 2 === 0 ? -100 : 100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-tl from-indigo-400 to-indigo-300 text-white p-6 rounded-xl shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-            >
-              <div className="flex flex-col items-center justify-center">
-                <span className="text-2xl font-extrabold mb-3">
-                  <NumericFormat
-                    thousandSeparator={true}
-                    thousandsGroupStyle="lakh"
-                    displayType="text"
-                    value={
-                      value.openpurch -
-                      value.closesale +
-                      (value.purch - value.sale)
-                    }
-                  />
-                </span>
-                {/* <span className="block text-sm text-indigo-100 mb-4">
-                  {value.item_name}
-                </span> */}
-              </div>
-              <div className="border-t border-white pt-4 text-center">
-                <span className="text-md font-semibold text-white opacity-80">
-                  {value.item_name} Stock
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="news-dashboard-wrapper mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div>
-              {isPieVisible && (
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden ">
-                  <div className="p-3 border-b border-gray-100 flex justify-between items-center">
-                    <div className="flex items-center gap-1">
-                      <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
-                        <PieChart className="w-5 h-5 text-purple-600" />
-                      </div>
-                      <h2 className="text-lg font-bold text-gray-900">
-                        Cash Receipts
-                      </h2>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleReload}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <RefreshIcon className="h-5 w-5 text-gray-500" />
-                      </button>
-                      <button
-                        onClick={() => setIsPieVisible(false)}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <X className="h-5 w-5 text-gray-500" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    {graphData && (
-                      <Doughnut
-                        data={graphData}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              position: "bottom",
-                            },
-                          },
-                          cutout: "70%",
-                        }}
-                        height={150}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 mt-6 px-4">
+              {stock.map((value, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ x: index % 2 === 0 ? -100 : 100, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                  className="bg-gradient-to-tl from-indigo-600 to-indigo-300 text-white p-2 rounded-xl shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                >
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="text-xl font-extrabold">
+                      <NumericFormat
+                        thousandSeparator={true}
+                        thousandsGroupStyle="lakh"
+                        displayType="text"
+                        value={
+                          value.openpurch -
+                          value.closesale +
+                          (value.purch - value.sale)
+                        }
                       />
-                    )}
-                    <h1>
-                      {" "}
-                      {(!graphData || graphData.length === 0) && (
-                        <div>No data available</div>
-                      )}
-                    </h1>
+                    </span>
                   </div>
-                </div>
-              )}
+                  <div className="border-t border-white pt-1 text-center">
+                    <span className="text-xs font-semibold text-white opacity-80 capitalize">
+                      {value.item_name
+                        ? value.item_name.charAt(0).toUpperCase() +
+                          value.item_name.slice(1).toLowerCase()
+                        : ""}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
             </div>
+          </div>
 
-            <div>
-              {isBarVisible && (
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden ">
-                  <div className="p-3 border-b border-gray-100 flex justify-between items-center">
-                    <div className="flex items-center gap-1">
-                      <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
-                        <PieChart className="w-5 h-5 text-purple-600" />
+          <div className="news-dashboard-wrapper">
+            <h3 className=" text-xl font-bold text-gray-800 text-center bg-white rounded-lg p-2 shadow-xl">
+              Graph
+            </h3>
+            <div className="grid grid-cols-1  gap-4 mt-6">
+              <div>
+                {isPieVisible && (
+                  <div className="bg-white rounded-lg shadow-sm overflow-hidden ">
+                    <div className="p-3 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
+                          <PieChart className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <h2 className="text-lg font-bold text-gray-900">
+                          Cash Receipts
+                        </h2>
                       </div>
-                      <h2 className="text-lg font-bold text-gray-900">
-                        Cash Receipts
-                      </h2>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleReload}
+                          className="p-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <RefreshIcon className="h-5 w-5 text-gray-500" />
+                        </button>
+                        <button
+                          onClick={() => setIsPieVisible(false)}
+                          className="p-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <X className="h-5 w-5 text-gray-500" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleReload}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <RefreshIcon className="h-5 w-5 text-gray-500" />
-                      </button>
-                      <button
-                        onClick={() => setIsBarVisible(false)}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <X className="h-5 w-5 text-gray-500" />
-                      </button>
+                    <div className="p-6">
+                      {graphData && (
+                        <Doughnut
+                          data={graphData}
+                          options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                              legend: {
+                                position: "bottom",
+                              },
+                            },
+                            cutout: "70%",
+                          }}
+                          height={150}
+                        />
+                      )}
+                      <h1>
+                        {" "}
+                        {(!graphData || graphData.length === 0) && (
+                          <div className="flex justify-center">
+                            No data available
+                          </div>
+                        )}
+                      </h1>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <BarChartComponent data={data} />
+                )}
+              </div>
+
+              <div>
+                {isBarVisible && (
+                  <div className="bg-white rounded-lg shadow-sm overflow-hidden ">
+                    <div className="p-3 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
+                          <PieChart className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <h2 className="text-lg font-bold text-gray-900">
+                          Cash Receipts
+                        </h2>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleReload}
+                          className="p-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <RefreshIcon className="h-5 w-5 text-gray-500" />
+                        </button>
+                        <button
+                          onClick={() => setIsBarVisible(false)}
+                          className="p-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <X className="h-5 w-5 text-gray-500" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <BarChartComponent data={data} />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -53,7 +53,6 @@ import ListOccasion from "./pages/Master/Occasion/Listoccasion";
 import AddOccasion from "./pages/Master/Occasion/Addoccasion";
 import EditOccasion from "./pages/Master/Occasion/Editoccasion";
 import EditDuplicate from "./pages/DonorList/Duplicate/EditDuplicate";
-import Test from "./pages/test";
 import MaterialRecepitAll from "./pages/DonorList/MaterialRecepitAll";
 import CashRecepitAll from "./pages/DonorList/CashRecepitAll";
 import TabIndex from "./pages/userManagement/TabIndex";
@@ -81,7 +80,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <>
-        <DisableRightClick />
+        {/* <DisableRightClick /> */}
 
         <ToastContainer />
         <Routes>
@@ -157,7 +156,6 @@ const App = () => {
           {/* //DOWLOAD */}
           <Route path="/web-donation" element={<DownloadWebDonation />} />
           <Route path="/webdonation" element={<WebDonation />} />
-          <Route path="/test" element={<Test />} />
           <Route path="/userManagement" element={<TabIndex />} />
           <Route path="/create-createMTest" element={<CreateButton />} />
           {/* ///animal stock */}

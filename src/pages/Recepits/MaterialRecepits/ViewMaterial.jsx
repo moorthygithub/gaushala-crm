@@ -1,19 +1,16 @@
-import Layout from "../../../layout/Layout";
-import { Card, Button } from "@material-tailwind/react";
-import { LuDownload } from "react-icons/lu";
-import { MdEmail, MdKeyboardBackspace } from "react-icons/md";
-import { IoIosPrint } from "react-icons/io";
-import { BaseUrl } from "../../../base/BaseUrl";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { IoIosPrint } from "react-icons/io";
+import { MdEmail } from "react-icons/md";
+import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { FaWhatsapp } from "react-icons/fa";
+import { BaseUrl } from "../../../base/BaseUrl";
 import {
   PdfDownloadInMaterialRecepit,
   WhatsappInMaterialRecepit,
 } from "../../../components/ButtonComponents";
 import { inputClass } from "../../../components/common/Buttoncss";
+import Layout from "../../../layout/Layout";
 
 function ViewMaterialRecepit() {
   const [receipts, setReceipts] = useState(null);
@@ -21,8 +18,7 @@ function ViewMaterialRecepit() {
   const [donor, setDonor] = useState(null);
   const [recepitsub, setRecepitsub] = useState([]);
   const { id } = useParams();
-  
-  const navigate = useNavigate();
+
   const [emailloading, setEmailloading] = useState(false);
 
   // Fetch data on component mount
@@ -97,16 +93,6 @@ function ViewMaterialRecepit() {
     }
   };
 
-  // const whatsApp = (e) => {
-  //   e.preventDefault();
-  //   const phoneNumber = donor.donor_whatsapp;
-  //   const message = "Hello!";
-  //   const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-  //     message
-  //   )}`;
-  //   window.open(whatsappLink, "_blank");
-  // };
-
   return (
     <Layout>
       <ToastContainer />
@@ -163,56 +149,6 @@ function ViewMaterialRecepit() {
 
         {receipts && (
           <div>
-            {/* <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4">
-              <PdfDownloadInMaterialRecepit
-                onClick={downloadReceipt}
-                className=" text-sm font-[400] cursor-pointer   text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
-              />
-              <WhatsappInMaterialRecepit
-                onClick={whatsApp}
-                className=" text-sm font-[400] cursor-pointer   text-white bg-green-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
-              />
-              {donor?.donor_email ? (
-                <div
-                  className={`${inputClass} flex flex-col items-center text-center`}
-                >
-                  <a onClick={sendEmail} className="flex items-center">
-                    <MdEmail className="text-lg" />
-                    <span>
-                      {emailloading ? "Sending..." : "Send Email"}
-                    </span>{" "}
-                  </a>
-                  {receipts?.m_receipt_email_count == null ? (
-                    <small
-                      style={{ fontSize: "10px" }}
-                      className="cursor-pointer"
-                    >
-                      Email Sent 0 Times
-                    </small>
-                  ) : (
-                    <small
-                      style={{ fontSize: "10px" }}
-                      className="cursor-pointer"
-                    >
-                      Email Sent {receipts.m_receipt_email_count} Times
-                    </small>
-                  )}
-                </div>
-              ) : (
-                <p style={{ color: "red" }} className="cursor-pointer">
-                  <i className="mr-10 ti-email"></i> Email not found
-                </p>
-              )}
-
-              <button
-                className={`${inputClass} flex items-center gap-1`}
-                onClick={printReceipt}
-              >
-                <IoIosPrint className="text-lg" />
-                <span>Print Receipt</span>
-              </button>
-            </div> */}
-
             <hr />
 
             {/* Receipt Details */}
@@ -222,13 +158,13 @@ function ViewMaterialRecepit() {
                   <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
                     <div className="border-b border-r border-black px-4 py-2 flex items-center">
                       <strong>Receipt No:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
+                      <p className="text-[#2677d6] font-bold text-sm ml-2">
                         {receipts.m_receipt_no}
                       </p>
                     </div>
                     <div className="border-b border-black px-4 py-2 flex items-center">
                       <strong>Date:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
+                      <p className="text-[#2677d6] font-bold text-sm ml-2">
                         {new Date(receipts.m_receipt_date).toLocaleDateString()}
                       </p>
                     </div>
@@ -236,7 +172,7 @@ function ViewMaterialRecepit() {
 
                   <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
                     <strong>Received with thanks from:</strong>
-                    <p className="text-black font-bold text-sm ml-2">
+                    <p className="text-[#2677d6] font-bold text-sm ml-2">
                       {donor?.donor_title} {donor?.donor_full_name},{" "}
                       {donor?.donor_city} - {donor?.donor_pin_code},{" "}
                       {donor?.donor_state}
@@ -245,13 +181,13 @@ function ViewMaterialRecepit() {
                   <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
                     <div className="border-b border-r border-black px-4 py-2 flex items-center">
                       <strong>Vehicle:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
+                      <p className="text-[#2677d6] font-bold text-sm ml-2">
                         {receipts.m_receipt_vehicle_no}
                       </p>
                     </div>
                     <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
                       <strong>Occasion of:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
+                      <p className="text-[#2677d6] font-bold text-sm ml-2">
                         {receipts.m_receipt_occasional}
                       </p>
                     </div>
@@ -261,7 +197,7 @@ function ViewMaterialRecepit() {
                     <strong>On Account of:</strong>
                     {recepitsub.map((item, index) => (
                       <div key={index} className="flex items-center">
-                        <p className="text-black font-bold text-sm ml-2">
+                        <p className="text-[#2677d6] font-bold text-sm ml-2">
                           {item.purchase_sub_item} - {item.purchase_sub_qnty},{" "}
                           {item.purchase_sub_unit}
                         </p>
@@ -272,14 +208,18 @@ function ViewMaterialRecepit() {
                   <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
                     <div className="border-black px-4 py-2 flex items-center">
                       <strong>Donor Sign:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        ({donor?.donor_title} {donor?.donor_full_name})
+                      <p className="text-[#2677d6] font-bold text-sm ml-2">
+                        {donor?.donor_title
+                          ? `(${donor?.donor_title} ${donor?.donor_full_name})`
+                          : ""}
                       </p>
                     </div>
                     <div className="border-black px-4 py-2 flex items-center">
                       <strong>Receiver Sign:</strong>
-                      <p className="text-black font-bold text-sm ml-2">
-                        ({company?.company_authsign})
+                      <p className="text-[#2677d6] font-bold text-sm ml-2">
+                        {company?.company_authsign
+                          ? `(${company?.company_authsign} )`
+                          : ""}
                       </p>
                     </div>
                   </div>

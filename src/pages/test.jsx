@@ -1,635 +1,369 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { MdKeyboardBackspace, MdDelete } from "react-icons/md";
-import axios from "axios";
-import Layout from "../layout/Layout";
-import Fields from "../components/common/TextField/TextField";
-import { toast } from "react-toastify";
-// import { Button, IconButton } from "@mui/material";
-import { BaseUrl } from "../base/BaseUrl";
-import {
-  Button,
-  Card,
-  CardBody,
-  IconButton,
-  Input,
-} from "@material-tailwind/react";
-import { Autocomplete, TextField } from "@mui/material";
+// import Layout from "../../../layout/Layout";
+// import { Card, Button } from "@material-tailwind/react";
+// import { LuDownload } from "react-icons/lu";
+// import { MdEmail, MdKeyboardBackspace } from "react-icons/md";
+// import { IoIosPrint } from "react-icons/io";
+// import { BaseUrl } from "../../../base/BaseUrl";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { useNavigate, useParams } from "react-router-dom";
+// import { toast, ToastContainer } from "react-toastify";
+// import {
+//   Dialog,
+//   DialogHeader,
+//   DialogBody,
+//   DialogFooter,
+// } from "@material-tailwind/react";
+// import { FaWhatsapp } from "react-icons/fa";
+// import numWords from "num-words";
+// import {
+//   PdfDownloadIncashRecepit,
+//   WhatsappIncashRecepit,
+// } from "../../../components/ButtonComponents";
+// import {
+//   inputClass,
+//   inputClassBack,
+// } from "../../../components/common/Buttoncss";
 
-// Unit options for dropdown
-const unitOptions = [
-  { value: "Kg", label: "Kg" },
-  { value: "Ton", label: "Ton" },
-];
+// function ViewCashRecepit() {
+//   const [receipts, setReceipts] = useState(null);
+//   const [company, setCompany] = useState({});
+//   const [donor, setDonor] = useState(null);
+//   const [recepitsub, setRecepitsub] = useState(null);
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+//   const [showModal, setShowModal] = useState(false);
+//   const [email, setEmail] = useState("");
+//   const [emailloading, setEmailloading] = useState(false);
 
-const DonorDonationReceipt = () => {
-  const navigate = useNavigate();
-  const [vendors, setVendors] = useState([]);
-  const [items, setItems] = useState([]);
-  //   const { id } = useParams();
-  //   const [userdata, setUserdata] = useState("");
+//   const amountInWords = receipts?.c_receipt_total_amount
+//     ? numWords(receipts.c_receipt_total_amount)
+//     : "";
+//   useEffect(() => {
+//     fetchdata();
+//   }, [id]);
 
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, "0");
-  var mm = String(today.getMonth() + 1).padStart(2, "0");
-  var yyyy = today.getFullYear();
+//   const fetchdata = () => {
+//     axios({
+//       url: `${BaseUrl}/fetch-c-receipt-by-id/${id}`,
 
-  today = mm + "/" + dd + "/" + yyyy;
-  var todayback = yyyy + "-" + mm + "-" + dd;
-  var d = document.getElementById("datefield");
-  if (d) {
-    document.getElementById("datefield").setAttribute("max", todayback);
-  }
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`,
+//       },
+//     })
+//       .then((res) => {
+//         setReceipts(res.data.receipts || {});
+//         setCompany(res.data.company || {});
+//         setDonor(res.data.donor);
+//         setRecepitsub(res.data.receiptSub || []);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching receipt data:", error);
+//       });
+//   };
+//   const downloadReceipt = (e) => {
+//     e.preventDefault();
+//     let check = (window.location.href = BaseUrl + "/download-receiptsc/" + id);
+//     if (check) {
+//       toast.success("Receipt Downloaded Sucessfully");
+//     } else {
+//       toast.error("Receipt Not Downloaded");
+//     }
+//   };
 
-  var todayyear = new Date().getFullYear();
-  var twoDigitYear = todayyear.toString().substr(-2);
-  var preyear = todayyear;
-  var finyear = +twoDigitYear + 1;
-  var finalyear = preyear + "-" + finyear;
-  const [dayClose, setDayClose] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-  const [check, setCheck] = useState(false);
+//   const sendEmail = (e) => {
+//     e.preventDefault();
+//     setEmailloading(true);
+//     axios({
+//       url: BaseUrl + "/send-receiptc/" + id,
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`,
+//       },
+//     })
+//       .then((res) => {
+//         toast.success("Email Sent Sucessfully");
+//         fetchdata();
+//         setEmailloading(false);
+//       })
+//       .catch((error) => {
+//         toast.error("Error sending email");
+//         console.error("Email error:", error);
+//         setEmailloading(false);
+//       });
+//   };
 
-  useEffect(() => {
-    var theLoginToken = localStorage.getItem("token");
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + theLoginToken,
-      },
-    };
+//   const printReceipt = (e) => {
+//     e.preventDefault();
+//     axios({
+//       url: BaseUrl + "/print-receiptc/" + id,
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`,
+//       },
+//     }).then((res) => {
+//       window.open(BaseUrl + "/print-receiptc/" + id, "_blank");
+//     });
+//   };
 
-    fetch(BaseUrl + "/fetch-m-receipt-date", requestOptions)
-      .then((response) => response.json())
-      .then((data) => setDayClose(data.latestdate.c_receipt_date));
-  }, []);
-  const [donor, setDonor] = useState({
-    indicomp_fts_id: "",
-    donor_fts_id: "",
-    m_receipt_financial_year: "",
-    m_receipt_date: check ? dayClose : dayClose,
-    m_receipt_total_amount: "",
-    m_receipt_tran_pay_mode: "",
-    m_receipt_tran_pay_details: "",
-    m_receipt_email_count: "",
-    m_receipt_count: "",
-    m_receipt_reason: "",
-    m_receipt_remarks: "",
-    m_receipt_sub_data: "",
-    m_receipt_occasional: "",
-    m_manual_receipt_no: "",
-    m_receipt_vehicle_no: "",
-  });
+//   const openModal = () => {
+//     setShowModal(true);
+//     localStorage.setItem("ftsid", receipts.donor_fts_id + "");
+//   };
+//   const closeModal = () => setShowModal(false);
 
-  const useTemplate = {
-    m_receipt_sub_item: "",
-    m_receipt_sub_quantity: "",
-    m_receipt_sub_unit: "",
-    m_receipt_sub_amount: "",
-  };
-  const [donorListData, setDonorListData] = useState([]);
+//   const onSubmitEmail = (e) => {
+//     e.preventDefault();
+//     let data = {
+//       donor_email: email,
+//     };
 
-  const [users, setUsers] = useState([useTemplate]);
-  const [fabric_inward_count, setCount] = useState(1);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  //fetch year
-  const [currentYear, setCurrentYear] = useState("");
-  useEffect(() => {
-    const fetchYearData = async () => {
-      try {
-        const response = await axios.get(`${BaseUrl}/fetch-year`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+//     axios({
+//       url: BaseUrl + "/update-donor-email/" + donor.donor_fts_id,
+//       method: "PUT",
+//       data,
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`,
+//       },
+//     }).then((res) => {
+//       if (res.data.code == "201") {
+//         toast.success("Email  Updated Sucessfully");
+//         closeModal();
+//         fetchdata();
+//       } else {
+//         toast.error("Duplicate Entry of Email Id");
+//         setShowModal(false);
+//       }
+//     });
+//   };
 
-        setCurrentYear(response.data.year.current_year);
-        console.log(response.data.year.current_year);
-      } catch (error) {
-        console.error("Error fetching year data:", error);
-      }
-    };
+//   // const whatsApp = (e) => {
+//   //   e.preventDefault();
 
-    fetchYearData();
-  }, []);
+//   //   const phoneNumber = donor.donor_whatsapp;
+//   //   const message = "Hello!";
+//   //   const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+//   //     message
+//   //   )}`;
+//   //   window.open(whatsappLink, "_blank");
+//   // };
+//   const whatsApp = (e) => {
+//     e.preventDefault();
+//     if (donor?.donor_whatsapp) {
+//       const phoneNumber = donor.donor_whatsapp;
+//       const message = "Hello!";
+//       const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+//         message
+//       )}`;
+//       window.open(whatsappLink, "_blank");
+//     } else {
+//       toast.error("Donor's WhatsApp number is not available.");
+//     }
+//   };
+//   return (
+//     <Layout>
+//       <ToastContainer />
+//       <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
+//         <div className="flex flex-col md:flex-row justify-between items-center p-2 gap-4">
+//           <h1 className="text-2xl text-[#464D69] font-semibold">
+//             Cash Receipt
+//           </h1>
+//           <div className="flex space-x-3">
+//             <div className="flex flex-col md:flex-row justify-center md:justify-end items-center space-y-4 md:space-y-0 md:space-x-4 p-3">
+//               <PdfDownloadIncashRecepit
+//                 onClick={downloadReceipt}
+//                 className={`${inputClass} w-[80px] flex items-center justify-center text-center`}
+//               />
+//               <WhatsappIncashRecepit
+//                 onClick={whatsApp}
+//                 className={`${inputClass}  flex items-center justify-center text-center`}
+//               />
 
-  useEffect(() => {
-    const fetchOpenData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${BaseUrl}/fetch-donor-list`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+//               {donor?.donor_email ? (
+//                 <>
+//                   <div
+//                     className={`${inputClass} flex flex-col items-center text-center`}
+//                   >
+//                     <div className="flex items-center justify-center gap-1">
+//                       <a onClick={sendEmail} className="flex items-center">
+//                         <MdEmail className="text-lg" />
+//                         <span>
+//                           {emailloading ? "Sending..." : "Send Email"}{" "}
+//                           {receipts?.c_receipt_email_count == null
+//                             ? "(0)"
+//                             : `(${receipts.c_receipt_email_count})`}
+//                         </span>
+//                       </a>
+//                     </div>
+//                   </div>
+//                 </>
+//               ) : (
+//                 <div className="flex flex-col items-start text-red-500 ">
+//                   <button onClick={openModal} className={`${inputClass} mt-6`}>
+//                     Add Email
+//                   </button>
+//                   <p className="flex items-center ml-6">
+//                     <span>Email not found</span>
+//                   </p>
+//                 </div>
+//               )}
 
-        setDonorListData(response?.data?.donor);
-      } catch (error) {
-        console.error("Error fetching open list enquiry data", error);
-      }
-    };
+//               <Dialog open={showModal} handler={closeModal}>
+//                 <DialogHeader>Add Donor Email</DialogHeader>
+//                 <DialogBody>
+//                   <input
+//                     type="email"
+//                     value={email}
+//                     onChange={(e) => setEmail(e.target.value)}
+//                     placeholder="Enter donor email"
+//                     className="w-full px-3 py-2 mt-1 border rounded"
+//                     name="donor_email"
+//                   />
+//                 </DialogBody>
+//                 <DialogFooter>
+//                   <button onClick={closeModal} className={inputClassBack}>
+//                     Cancel
+//                   </button>
+//                   <button onClick={onSubmitEmail} className={inputClass}>
+//                     Add Email
+//                   </button>
+//                 </DialogFooter>
+//               </Dialog>
 
-    fetchOpenData();
-  }, []);
-  //FETCH OCCASION
-  const [occasion, setOccasion] = useState([]);
-  useEffect(() => {
-    var theLoginToken = localStorage.getItem("token");
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + theLoginToken,
-      },
-    };
+//               <button
+//                 className={`${inputClass} flex  justify-center items-center gap-1`}
+//                 onClick={printReceipt}
+//               >
+//                 <IoIosPrint className="text-lg" />
+//                 <span>Print</span>
+//               </button>
+//             </div>
+//           </div>
+//         </div>
 
-    fetch(BaseUrl + "/fetch-occasion", requestOptions)
-      .then((response) => response.json())
-      .then((data) => setOccasion(data.occasion));
-  }, []);
-  // Fetch vendors and items on mount
-  useEffect(() => {
-    const fetchVendorData = async () => {
-      const response = await axios.get(`${BaseUrl}/fetch-vendor`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setVendors(response.data.vendor);
-    };
+//         {receipts && (
+//           <div>
+//             <hr></hr>
 
-    const fetchItemData = async () => {
-      const response = await axios.get(`${BaseUrl}/fetch-item`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setItems(response.data.item);
-    };
+//             <div className="flex justify-center mt-2">
+//               <div className="p-4 w-full max-w-[90%] md:max-w-[80%] lg:max-w-[70%]">
+//                 <div className="border border-black">
+//                   <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
+//                     <div className="border-b border-r border-black px-4 py-2 flex items-center">
+//                       <strong>Receipt No:</strong>
+//                       <p className="text-black font-bold text-sm ml-2">
+//                         {receipts.c_receipt_no}
+//                       </p>
+//                     </div>
+//                     <div className="border-b border-black px-4 py-2 flex items-center">
+//                       <strong>Date:</strong>
+//                       <p className="text-black font-bold text-sm ml-2">
+//                         {new Date(receipts.c_receipt_date).toLocaleDateString()}
+//                       </p>
+//                     </div>
+//                   </div>
 
-    fetchVendorData();
-    fetchItemData();
+//                   <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
+//                     <strong>Received with thanks from:</strong>
+//                     {receipts.family_full_check == "Yes" ? (
+//                       <>
+//                         <p className="text-black font-bold text-sm ml-2">
+//                           {donor?.donor_title} {receipts?.family_full_name},{" "}
+//                           {donor?.donor_city} - {donor?.donor_pin_code},{" "}
+//                           {donor?.donor_state}
+//                         </p>
+//                       </>
+//                     ) : (
+//                       <>
+//                         <p className="text-black font-bold text-sm ml-2">
+//                           {donor?.donor_title} {donor?.donor_full_name},{" "}
+//                           {donor?.donor_city} - {donor?.donor_pin_code},{" "}
+//                           {donor?.donor_state}
+//                         </p>
+//                       </>
+//                     )}
+//                     {/* <p className="text-black font-bold text-sm ml-2">
+//                       {receipts.family_full_check === "Yes"
+//                         ? `${donor?.donor_title} ${receipts?.family_full_name}, ${donor?.donor_city} - ${donor?.donor_pin_code}, ${donor?.donor_state}`
+//                         : `${donor?.donor_title} ${donor?.donor_full_name}, ${donor?.donor_city} - ${donor?.donor_pin_code}, ${donor?.donor_state}`}
+//                     </p> */}
+//                   </div>
 
-    const dateField = document.getElementById("datefield");
-    if (dateField) {
-      dateField.setAttribute("max", todayback);
-    }
-  }, [todayback]);
+//                   <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
+//                     <strong>Occasion of:</strong>
+//                     <p className="text-black font-bold text-sm ml-2">
+//                       {receipts.c_receipt_occasional}
+//                     </p>
+//                   </div>
 
-  const addItem = () => {
-    setUsers([...users, useTemplate]);
-    setCount(fabric_inward_count + 1);
-  };
+//                   <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
+//                     <strong>On Account of:</strong>
+//                     {recepitsub.map((item, index) => (
+//                       <div key={index} className="flex items-center">
+//                         <p className="text-black font-bold text-sm ml-2">
+//                           {item.c_receipt_sub_donation_type} -{" "}
+//                           {item.c_receipt_sub_amount},
+//                         </p>
+//                       </div>
+//                     ))}
+//                   </div>
 
-  const removeUser = (index) => {
-    const filteredUsers = [...users];
-    filteredUsers.splice(index, 1);
-    setUsers(filteredUsers);
-    setCount(fabric_inward_count - 1);
-  };
-  const validateOnlyDigits = (inputtxt) => {
-    var phoneno = /^\d+$/;
-    if (inputtxt.match(phoneno) || inputtxt.length == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  const onInputChange = (e) => {
-    if (e.target.name == "m_receipt_total_amount") {
-      if (validateOnlyDigits(e.target.value)) {
-        setDonor({
-          ...donor,
-          [e.target.name]: e.target.value,
-        });
-      }
-    } else {
-      setDonor({
-        ...donor,
-        [e.target.name]: e.target.value,
-      });
-    }
-  };
+//                   <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
+//                     <div className="border-b border-r border-black px-4 py-2 flex items-center">
+//                       <strong>Pay Mode:</strong>
+//                       <p className="text-black font-bold text-sm ml-2">
+//                         {receipts.c_receipt_tran_pay_mode}
+//                       </p>
+//                     </div>
+//                     <div className="border-b border-black px-4 py-2 flex items-center">
+//                       <strong>PAN:</strong>
+//                       <p className="text-black font-bold text-sm ml-2">
+//                         {company?.company_pan_no}
+//                       </p>
+//                     </div>
+//                   </div>
 
-  const validateOnlyNumber = (inputtxt) => {
-    var phoneno = /^\d*\.?\d*$/;
-    if (inputtxt.match(phoneno) || inputtxt.length == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+//                   <div className="border-b border-black px-4 py-2 h-auto md:h-16 flex items-center">
+//                     <strong>Reference:</strong>
+//                     <p className="text-black font-bold text-sm ml-2">
+//                       {receipts.c_receipt_ref_no}
+//                     </p>
+//                   </div>
 
-  //ONCHNAGE FOR USER
-  const onChange = (e, index) => {
-    if (e.target.name == "m_receipt_sub_quantity") {
-      if (validateOnlyNumber(e.target.value)) {
-        const updatedUsers = users.map((user, i) =>
-          index == i
-            ? Object.assign(user, { [e.target.name]: e.target.value })
-            : user
-        );
-        setUsers(updatedUsers);
-      }
-    } else {
-      const updatedUsers = users.map((user, i) =>
-        index == i
-          ? Object.assign(user, { [e.target.name]: e.target.value })
-          : user
-      );
-      setUsers(updatedUsers);
-    }
-  };
+//                   <div className="px-4 py-2 border-b border-black h-auto md:h-16 flex items-center">
+//                     <strong>Amount:</strong>
+//                     <p className="text-black font-bold text-sm ml-2">
+//                       {receipts.c_receipt_total_amount}
+//                     </p>{" "}
+//                     /- (
+//                     <p className="text-black font-bold text-sm capitalize">
+//                       {amountInWords} Only)
+//                     </p>
+//                   </div>
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (!selectedDonor || !selectedDonor.donor_fts_id) {
-      setError(true);
-      return;
-    } else {
-      setError(false);
-      console.log("Form submitted with selected donor:", selectedDonor);
+//                   <div className="grid grid-cols-1 md:grid-cols-2 h-auto md:h-16">
+//                     <div className=" border-black px-4 py-2 flex items-center">
+//                       <strong>Donor Sign:</strong>
+//                       <p className="text-black font-bold text-sm ml-2">
+//                         ({donor?.donor_title} {donor?.donor_full_name})
+//                       </p>
+//                     </div>
+//                     <div className=" border-black px-4 py-2 flex items-center">
+//                       <strong>Receiver Sign:</strong>
+//                       <p className="text-black font-bold text-sm ml-2">
+//                         ({company?.company_authsign})
+//                       </p>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </Layout>
+//   );
+// }
 
-      let data = {
-        donor_fts_id: donor.donor_fts_id,
-        m_receipt_financial_year: currentYear,
-        m_receipt_date: check ? dayClose : dayClose,
-        m_receipt_total_amount: donor.m_receipt_total_amount,
-        m_receipt_tran_pay_mode: donor.m_receipt_tran_pay_mode,
-        m_receipt_tran_pay_details: donor.m_receipt_tran_pay_details,
-        m_receipt_remarks: donor.m_receipt_remarks,
-        m_receipt_reason: donor.m_receipt_reason,
-        m_receipt_email_count: donor.m_receipt_email_count,
-        m_manual_receipt_no: donor.m_manual_receipt_no,
-        m_receipt_count: fabric_inward_count,
-        m_receipt_sub_data: users,
-        m_receipt_vehicle_no: donor.m_receipt_vehicle_no,
-        m_receipt_occasional: donor.m_receipt_occasional,
-      };
-      console.log(data, "MATERIAL DATA");
-      const isValid = document.getElementById("addIndiv").checkValidity();
-
-      if (isValid) {
-        setIsButtonDisabled(true);
-
-        axios
-          .post(`${BaseUrl}/create-m-receipt`, data, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          })
-          .then((res) => {
-            if (res.status == 200 && res.data.code == "200") {
-            //   toast.success("Donor Created Successfully");
-              navigate(`/material-view/${res.data.latestid.id}`);
-            } else {
-              toast.error(res.data.message || "Error occurred");
-            }
-          })
-          .catch((err) => {
-            if (err.response) {
-              toast.error(
-                `Error: ${
-                  err.response.data.message || "An error occurred on the server"
-                }`
-              );
-              console.error("Server Error:", err.response);
-            } else if (err.request) {
-              toast.error("No response from the server.");
-              console.error("No Response:", err.request);
-            } else {
-              toast.error(`Error: ${err.message}`);
-              console.error("Error Message:", err.message);
-            }
-          })
-          .finally(() => {
-            setIsButtonDisabled(false);
-          });
-      }
-    }
-  };
-
-  const handleBackButton = () => {
-    navigate("/donor-list");
-  };
-
-  //   useEffect(() => {
-  //     axios({
-  //       url: BaseUrl + "/fetch-donor-by-id/" + id,
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     }).then((res) => {
-  //       setUserdata(res.data.donor);
-  //       console.log("datatable", res.data.donor);
-  //     });
-  //   }, []);
-  //DAY CLOSE
-
-  //DAY close
-  const onDayClose = (e) => {
-    e.preventDefault();
-    setCheck(true);
-
-    const receivedDate = new Date(dayClose);
-
-    if (isNaN(receivedDate)) {
-      console.error("Invalid dayClose date:", dayClose);
-      return;
-    }
-
-    receivedDate.setDate(receivedDate.getDate() + 1);
-
-    const year = receivedDate.getFullYear();
-    const month = String(receivedDate.getMonth() + 1).padStart(2, "0"); // Get month from 0-11, add 1 and pad with zero
-    const day = String(receivedDate.getDate()).padStart(2, "0"); // Get day and pad with zero
-
-    const formattedDate = `${year}-${month}-${day}`;
-    console.log(formattedDate, "formattedDate");
-    let data = {
-      c_receipt_date: formattedDate,
-    };
-
-    // Making the API call
-    axios({
-      url: BaseUrl + "/update-m-receipt-date/2",
-      method: "PUT",
-      data,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => {
-        console.log(res.data, "dayclose"); // Log the response data for debugging
-        // Set the new dayClose value
-        setDayClose(res.data.latestdate.c_receipt_date);
-      })
-      .catch((error) => {
-        console.error("Error updating receipt date:", error);
-      });
-  };
-  const isValidDate = (dateString) => {
-    const parsedDate = Date.parse(dateString);
-    return !isNaN(parsedDate);
-  };
-
-  const onDayOpen = (e) => {
-    e.preventDefault();
-    setCheck(true);
-    const receivedDate = new Date(dayClose);
-    receivedDate.setDate(receivedDate.getDate() - 1);
-
-    const year = receivedDate.getFullYear();
-    const month = String(receivedDate.getMonth() + 1).padStart(2, "0");
-    const day = String(receivedDate.getDate()).padStart(2, "0");
-    const formattedDate = `${year}-${month}-${day}`;
-    let data = {
-      c_receipt_date: formattedDate,
-    };
-    axios({
-      url: BaseUrl + "/update-m-receipt-date-open/2",
-      method: "PUT",
-      data,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      if (res.data.code == 401) {
-        NotificationManager.error(
-          "In that Date there is already Receipt is Created"
-        );
-      } else {
-        setDayClose(res.data.latestdate.c_receipt_date);
-      }
-    });
-  };
-  const [selectedDonor, setSelectedDonor] = useState(null);
-  const [error, setError] = useState(false);
-  const handleDonorChange = (selectedDonor) => {
-    console.log(selectedDonor.donor_fts_id);
-    setSelectedDonor(selectedDonor);
-    setError(false); // Cle
-    setDonor((prevDonor) => ({
-      ...prevDonor,
-      donor_fts_id: selectedDonor.donor_fts_id,
-    }));
-  };
-  return (
-    <Layout>
-      <div>
-        <div className="flex flex-col md:flex-row items-center justify-between mb-4 mt-6">
-          <div className="flex items-center">
-            <MdKeyboardBackspace
-              onClick={handleBackButton}
-              className="text-white bg-[#464D69] p-1 w-10 h-8 cursor-pointer rounded-2xl"
-            />
-            <h1 className="text-2xl text-[#464D69] font-semibold ml-2">
-              Material Receipt ALL
-            </h1>
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center md:space-x-4 mt-4 md:mt-0">
-            {localStorage.getItem("user_type_id") === "2" && (
-              <Button
-                onClick={(e) => onDayOpen(e)}
-                className="mb-2 md:mb-0  bg-red-400"
-              >
-                + Day Open
-              </Button>
-            )}
-
-            <Button
-              disabled={dayClose === todayback}
-              onClick={dayClose !== todayback ? (e) => onDayClose(e) : null}
-              className="btn-get-started  bg-red-400"
-              color="danger"
-            >
-              + Day Close
-            </Button>
-          </div>
-        </div>
-
-        <div className="p-6  bg-white shadow-md rounded-lg">
-          <form id="addIndiv" onSubmit={onSubmit}>
-            <div className="mb-4">
-              <Autocomplete
-                disablePortal
-                name="donor_fts_id"
-                options={donorListData.map((donor) => ({
-                  ...donor,
-                  label: donor.donor_full_name,
-                  id: donor.donor_fts_id,
-                }))}
-                loading={donorListData.length === 0}
-                renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
-                    {option.label}
-                  </li>
-                )}
-                isOptionEqualToValue={(option, value) =>
-                  option.donor_fts_id === value.donor_fts_id
-                }
-                onChange={(event, selectedOption) =>
-                  handleDonorChange(selectedOption)
-                }
-                rules={{ required: true }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Select Donor"
-                    error={error} // Show error if validation fails
-                    helperText={error ? "Please select a donor" : ""}
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        height: 40,
-                        fontSize: "1rem",
-                      },
-                    }}
-                  />
-                )}
-                loadingText="Loading donors..."
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-              {/* Purchase Details */}
-              <div>
-                <Fields
-                  type="textField"
-                  label="Approx Value"
-                  name="m_receipt_total_amount"
-                  value={donor.m_receipt_total_amount}
-                  onChange={onInputChange}
-                />
-              </div>
-              <div>
-                <Fields
-                  type="textField"
-                  label="Vehicle No"
-                  name="m_receipt_vehicle_no"
-                  value={donor.m_receipt_vehicle_no}
-                  onChange={onInputChange}
-                />
-              </div>
-
-              <div>
-                <Fields
-                  select
-                  title="On Occasion"
-                  type="occasionDropdown"
-                  name="m_receipt_occasional"
-                  value={donor.m_receipt_occasional}
-                  onChange={onInputChange}
-                  options={occasion}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-              <div className="md:col-span-2">
-                <Fields
-                  type="textField"
-                  name="m_receipt_remarks"
-                  value={donor.m_receipt_remarks}
-                  onChange={onInputChange}
-                  label="Remarks"
-                />
-              </div>
-
-              <div className="mb-4">
-                <Fields
-                  type="textField"
-                  name="m_manual_receipt_no"
-                  value={donor.m_manual_receipt_no}
-                  onChange={onInputChange}
-                  label="Manual Receipt No"
-                />
-              </div>
-            </div>
-
-            {/* Line Items */}
-            {users.map((user, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4"
-              >
-                <div className="md:col-span-2">
-                  <Fields
-                    required
-                    select
-                    title="Item"
-                    type="itemdropdown"
-                    value={user.m_receipt_sub_item}
-                    name="m_receipt_sub_item"
-                    onChange={(e) => onChange(e, index)}
-                    options={items}
-                  />
-                </div>
-
-                <Fields
-                  required
-                  label="Quantity"
-                  type="textField"
-                  value={user.m_receipt_sub_quantity}
-                  name="m_receipt_sub_quantity"
-                  onChange={(e) => onChange(e, index)}
-                />
-                <Fields
-                  required
-                  select
-                  title="Unit"
-                  type="whatsappDropdown"
-                  name="m_receipt_sub_unit"
-                  value={user.m_receipt_sub_unit}
-                  onChange={(e) => onChange(e, index)}
-                  options={unitOptions}
-                />
-                <div
-                  className="flex justify-start text-2xl text-red-500 bg-white cursor-pointer"
-                  onClick={() => removeUser(index)}
-                >
-                  {/* <IconButton
-                    className="text-red-500 bg-white"
-                  
-                  > */}
-                  <MdDelete />
-                  {/* </IconButton> */}
-                </div>
-              </div>
-            ))}
-
-            <div className="display-flex justify-start ">
-              <Button
-                onClick={addItem}
-                className="mt-4 bg-blue-400"
-                // disabled={isAddMoreDisabled()}
-              >
-                Add More
-              </Button>
-            </div>
-            <div className="flex justify-center mt-4 space-x-4">
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={isButtonDisabled}
-                className="mt-4 bg-blue-400"
-              >
-                Submit
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                className="mt-4 bg-red-400"
-                onClick={handleBackButton}
-              >
-                Back
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </Layout>
-  );
-};
-
-export default DonorDonationReceipt;
+// export default ViewCashRecepit;
